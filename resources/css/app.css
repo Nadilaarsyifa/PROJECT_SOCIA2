@@ -1,3 +1,11 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Tema PGE-SOCIA */
+:root {
+    --pge-green: #0f6b45;
+    --pge-green-dark: #0b5636;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
