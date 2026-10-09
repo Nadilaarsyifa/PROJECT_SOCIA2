@@ -9,14 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id('id_user');
-            $table->string('nama');
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->string('role');
+        Schema::create('knowledge_bases', function (Blueprint $table) {
+            $table->id('id_knowledge');
+            $table->string('title');
+            $table->text('content');
+            $table->string('source')->nullable();
+            $table->string('category')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('knowledge_bases');
     }
 };
