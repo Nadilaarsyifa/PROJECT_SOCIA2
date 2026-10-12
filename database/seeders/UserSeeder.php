@@ -9,7 +9,8 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::updateOrCreate(
+        // Membuat atau memperbarui akun Administrator
+        $admin = User::updateOrCreate(
             ['username' => 'admin'],
             [
                 'nama' => 'Administrator',
@@ -18,7 +19,8 @@ class UserSeeder extends Seeder
             ]
         );
 
-        User::updateOrCreate(
+        // Membuat atau memperbarui akun SOC Engineer
+        $engineer = User::updateOrCreate(
             ['username' => 'socengineer'],
             [
                 'nama' => 'SOC Engineer',
@@ -26,5 +28,9 @@ class UserSeeder extends Seeder
                 'role' => 'SOC Engineer',
             ]
         );
+
+        // Menghubungkan akun dengan role Spatie
+        $admin->syncRoles(['Administrator']);
+        $engineer->syncRoles(['SOC Engineer']);
     }
 }
