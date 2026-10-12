@@ -13,7 +13,7 @@ class RoleSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Buat permission yang diperlukan
+        // Daftar seluruh permission
         $permissions = [
             'manage users',
             'manage knowledge base',
@@ -31,25 +31,22 @@ class RoleSeeder extends Seeder
             ]);
         }
 
-        // Buat role Administrator
+        // Role Administrator: memiliki semua permission
         $admin = Role::firstOrCreate([
             'name' => 'Administrator',
             'guard_name' => 'web',
         ]);
 
-        $admin->syncPermissions([
-            'manage users',
-            'manage knowledge base',
-            'verify investigations',
-        ]);
+        $admin->syncPermissions($permissions);
 
-        // Buat role SOC Engineer
+        // Role SOC Engineer: hanya memiliki permission operasional
         $engineer = Role::firstOrCreate([
             'name' => 'SOC Engineer',
             'guard_name' => 'web',
         ]);
 
         $engineer->syncPermissions([
+            'verify investigations',
             'manage tickets',
             'analyze alerts',
             'manage action checklists',
