@@ -4,6 +4,7 @@
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,4 +35,9 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
 
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
+        
+    // Analyze Ticket untuk Administrator dan SOC Engineer
+    Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])
+        ->get('/tickets/analyze', [TicketController::class, 'create'])
+        ->name('tickets.create');
 });
