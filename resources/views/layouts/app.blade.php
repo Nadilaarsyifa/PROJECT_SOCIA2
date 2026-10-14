@@ -25,11 +25,14 @@
             --sidebar: #0F3B2C;
             --accent: #17824A;
             --accent-dark: #10683B;
-            --hover: #F4F7F5;
         }
 
         * {
             box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
         }
 
         body {
@@ -39,14 +42,20 @@
             color: var(--ink);
         }
 
+        body.sidebar-open {
+            overflow: hidden;
+        }
+
         .socia-layout {
             min-height: 100vh;
         }
 
+        /* SIDEBAR DESKTOP */
+
         .socia-sidebar {
             position: fixed;
             inset: 0 auto 0 0;
-            z-index: 100;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             width: 258px;
@@ -54,6 +63,7 @@
             background: var(--sidebar);
             color: #FFFFFF;
             overflow-y: auto;
+            overscroll-behavior: contain;
         }
 
         .socia-brand {
@@ -65,16 +75,23 @@
             text-decoration: none;
         }
 
-        .socia-brand-icon {
+        .socia-brand-logo {
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            width: 43px;
-            height: 43px;
-            border-radius: 13px;
-            background: rgba(255, 255, 255, 0.13);
-            font-size: 22px;
+            width: 48px;
+            height: 48px;
+            padding: 3px;
+            border-radius: 10px;
+            background: #FFFFFF;
+            overflow: hidden;
+        }
+
+        .socia-brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .socia-brand-name {
@@ -212,20 +229,39 @@
             font-size: 15px;
         }
 
+        /* TOMBOL TUTUP: HANYA UNTUK MOBILE */
+
+        .socia-mobile-close {
+            display: none;
+        }
+
+        /* OVERLAY MOBILE */
+
+        .socia-overlay {
+            display: none;
+        }
+
+        /* KONTEN UTAMA */
+
         .socia-main {
             min-height: 100vh;
+            min-width: 0;
             margin-left: 258px;
         }
 
         .socia-topbar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             gap: 16px;
             min-height: 76px;
             padding: 18px 32px;
             border-bottom: 1px solid var(--line);
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .socia-topbar-heading {
+            flex: 1;
+            min-width: 0;
         }
 
         .socia-page-heading {
@@ -241,6 +277,7 @@
         }
 
         .socia-content {
+            min-width: 0;
             padding: 30px 32px;
         }
 
@@ -248,44 +285,169 @@
             border-radius: 13px;
         }
 
+        /* TOMBOL HAMBURGER */
+
+        .socia-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #FFFFFF;
+            color: var(--sidebar);
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .socia-menu-toggle:hover {
+            background: #F0F7F2;
+        }
+
+        .socia-menu-toggle:focus-visible,
+        .socia-mobile-close:focus-visible,
+        .socia-overlay:focus-visible {
+            outline: 3px solid #6BC58D;
+            outline-offset: 3px;
+        }
+
+        /* RESPONSIVE TABLET DAN HP */
+
         @media (max-width: 800px) {
             .socia-sidebar {
-                position: relative;
-                width: 100%;
-                min-height: auto;
-                padding: 16px;
+                position: fixed;
+                inset: 0 auto 0 0;
+                width: min(290px, 85vw);
+                height: 100vh;
+                height: 100dvh;
+                padding: 22px 16px;
+                padding-top: max(22px, env(safe-area-inset-top));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+                overflow-y: auto;
+                transform: translateX(-105%);
+                visibility: hidden;
+                pointer-events: none;
+                transition:
+                    transform 0.28s ease,
+                    visibility 0.28s ease;
+                box-shadow: 12px 0 35px rgba(0, 0, 0, 0.12);
+            }
+
+            .socia-sidebar.is-open {
+                transform: translateX(0);
+                visibility: visible;
+                pointer-events: auto;
             }
 
             .socia-brand {
-                padding-bottom: 18px;
+                padding: 0 5px 26px;
             }
 
             .socia-nav {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
             }
 
             .socia-sidebar-bottom {
-                margin-top: 18px;
-                padding-top: 12px;
+                margin-top: auto;
+                padding-top: 24px;
             }
 
             .socia-main {
+                width: 100%;
                 margin-left: 0;
             }
 
             .socia-topbar {
-                padding: 18px 20px;
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                min-height: 68px;
+                gap: 12px;
+                padding: 12px 16px;
+                padding-top: max(12px, env(safe-area-inset-top));
+                background: rgba(255, 255, 255, 0.97);
+                backdrop-filter: blur(12px);
+            }
+
+            .socia-menu-toggle {
+                display: inline-flex;
+            }
+
+            .socia-page-heading {
+                font-size: 16px;
+            }
+
+            .socia-page-subtitle {
+                font-size: 10px;
+                line-height: 1.5;
             }
 
             .socia-content {
-                padding: 20px;
+                padding: 18px 14px;
+            }
+
+            .socia-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 999;
+                display: block;
+                background: rgba(7, 25, 17, 0.56);
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+                transition:
+                    opacity 0.28s ease,
+                    visibility 0.28s ease;
+            }
+
+            .socia-overlay.is-visible {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+            }
+
+            .socia-mobile-close {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 34px;
+                height: 34px;
+                margin-left: auto;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                border-radius: 8px;
+                background: transparent;
+                color: #FFFFFF;
+                font-size: 19px;
+                cursor: pointer;
             }
         }
 
         @media (max-width: 420px) {
-            .socia-nav {
-                grid-template-columns: 1fr;
+            .socia-content {
+                padding: 14px 10px;
+            }
+
+            .socia-brand-name {
+                font-size: 20px;
+            }
+
+            .socia-topbar {
+                gap: 10px;
+                padding-right: 12px;
+                padding-left: 12px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .socia-sidebar,
+            .socia-overlay {
+                transition: none;
             }
         }
     </style>
@@ -293,80 +455,110 @@
 
 <body>
     @php
-        $currentUser = auth()->user();
+    $currentUser = auth()->user();
 
-        $currentRole = $currentUser?->getRoleNames()->first()
-            ?? $currentUser?->role
-            ?? 'Pengguna';
+    $currentRole = $currentUser?->getRoleNames()->first()
+    ?? $currentUser?->role
+    ?? 'Pengguna';
 
-        $currentName = $currentUser?->nama
-            ?? $currentUser?->username
-            ?? 'Pengguna';
+    $currentName = $currentUser?->nama
+    ?? $currentUser?->username
+    ?? 'Pengguna';
 
-        $initials = strtoupper(substr($currentName, 0, 2));
+    $initials = strtoupper(substr($currentName, 0, 2));
     @endphp
 
     <div class="socia-layout">
-        <aside class="socia-sidebar">
 
-            <a href="{{ route('dashboard') }}" class="socia-brand">
-                <div class="socia-brand-icon">
-                    <i class="bi bi-shield-check"></i>
-                </div>
+        <!-- OVERLAY MOBILE -->
+        <div
+            class="socia-overlay"
+            id="sociaOverlay"
+            aria-hidden="true"></div>
 
-                <div>
-                    <div class="socia-brand-name">PGE-SOCIA</div>
-                    <div class="socia-brand-subtitle">SOC INTELLIGENCE</div>
-                </div>
-            </a>
+        <!-- SIDEBAR -->
+        <aside
+            class="socia-sidebar"
+            id="sociaSidebar"
+            aria-label="Menu navigasi utama">
+            <div style="display: flex; align-items: center;">
+                <a href="{{ route('dashboard') }}" class="socia-brand">
+                    <div class="socia-brand-logo">
+                        <img
+                            src="{{ asset('images/Logo PGE.jpeg') }}"
+                            alt="Logo PEMA Global Energi">
+                    </div>
+
+                    <div>
+                        <div class="socia-brand-name">PGE-SOCIA</div>
+                        <div class="socia-brand-subtitle">SOC INTELLIGENCE</div>
+                    </div>
+                </a>
+
+                <button
+                    type="button"
+                    class="socia-mobile-close"
+                    id="sociaCloseMenu"
+                    aria-label="Tutup menu"
+                    aria-controls="sociaSidebar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
 
             <div class="socia-nav-label">Menu Utama</div>
 
             <nav class="socia-nav">
 
-                <a href="{{ route('dashboard') }}"
-                    class="socia-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <a
+                    href="{{ route('dashboard') }}"
+                    class="socia-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
+                    @if(request()->routeIs('dashboard')) aria-current="page" @endif
+                    >
                     <span class="socia-nav-icon">
                         <i class="bi bi-grid-1x2"></i>
                     </span>
                     Dashboard
                 </a>
 
-                <a href="{{ route('tickets.create') }}"
-                    class="socia-nav-link {{ request()->routeIs('tickets.*') ? 'active' : '' }}">
+                <a
+                    href="{{ route('tickets.create') }}"
+                    class="socia-nav-link {{ request()->routeIs('tickets.create') ? 'active' : '' }}"
+                    @if(request()->routeIs('tickets.*')) aria-current="page" @endif
+                    >
                     <span class="socia-nav-icon">
                         <i class="bi bi-search"></i>
                     </span>
                     Analyze Ticket
                 </a>
 
-                <span class="socia-nav-link disabled"
-                    title="Menu akan diaktifkan saat fitur dibuat"
-                    aria-disabled="true">
+                <a href="{{ route('tickets.index') }}"
+                    class="socia-nav-link {{ request()->routeIs('tickets.index') ? 'active' : '' }}">
                     <span class="socia-nav-icon">
                         <i class="bi bi-ticket-detailed"></i>
                     </span>
                     All Tickets
-                </span>
+                </a>
 
                 @if ($currentUser && $currentUser->hasRole('Administrator'))
 
-                    <a href="{{ route('admin.users.index') }}"
-                        class="socia-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                        <span class="socia-nav-icon">
-                            <i class="bi bi-people"></i>
-                        </span>
-                        User Management
-                    </a>
-
-                    <span class="socia-nav-link disabled"
-                        title="Menu akan diaktifkan saat fitur dibuat"
-                        aria-disabled="true">
-                        <span class="socia-nav-icon">
-                            <i class="bi bi-journal-text"></i>
-                        </span>
-                        Knowledge Base / SOP
+                <a
+                    href="{{ route('admin.users.index') }}"
+                    class="socia-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
+                    @if(request()->routeIs('admin.users.*')) aria-current="page" @endif
+                    >
+                    <span class="socia-nav-icon">
+                        <i class="bi bi-people"></i>
                     </span>
+                    User Management
+                </a>
+                
+                <a href="{{ route('knowledge-base.index') }}"
+                    class="socia-nav-link {{ request()->routeIs('knowledge-base.*') ? 'active' : '' }}">
+                    <span class="socia-nav-icon">
+                        <i class="bi bi-journal-text"></i>
+                    </span>
+                    Knowledge Base / SOP
+                </a>
 
                 @endif
 
@@ -395,19 +587,32 @@
             </div>
         </aside>
 
+        <!-- KONTEN UTAMA -->
         <div class="socia-main">
 
             <header class="socia-topbar">
-                <div>
+
+                <button
+                    type="button"
+                    class="socia-menu-toggle"
+                    id="sociaOpenMenu"
+                    aria-label="Buka menu navigasi"
+                    aria-controls="sociaSidebar"
+                    aria-expanded="false">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div class="socia-topbar-heading">
                     @isset($header)
-                        {{ $header }}
+                    {{ $header }}
                     @else
-                        <div class="socia-page-heading">PGE-SOCIA</div>
-                        <div class="socia-page-subtitle">
-                            Security Operations Center Intelligence Assistant
-                        </div>
+                    <div class="socia-page-heading">PGE-SOCIA</div>
+                    <div class="socia-page-subtitle">
+                        Security Operations Center Intelligence Assistant
+                    </div>
                     @endisset
                 </div>
+
             </header>
 
             <main class="socia-content">
@@ -416,6 +621,64 @@
 
         </div>
     </div>
+
+    <script>
+        (() => {
+            const sidebar = document.getElementById('sociaSidebar');
+            const overlay = document.getElementById('sociaOverlay');
+            const openButton = document.getElementById('sociaOpenMenu');
+            const closeButton = document.getElementById('sociaCloseMenu');
+
+            if (!sidebar || !overlay || !openButton || !closeButton) {
+                return;
+            }
+
+            const mobileQuery = window.matchMedia('(max-width: 800px)');
+
+            function openMenu() {
+                if (!mobileQuery.matches) return;
+
+                sidebar.classList.add('is-open');
+                overlay.classList.add('is-visible');
+                document.body.classList.add('sidebar-open');
+
+                openButton.setAttribute('aria-expanded', 'true');
+                overlay.setAttribute('aria-hidden', 'false');
+            }
+
+            function closeMenu() {
+                sidebar.classList.remove('is-open');
+                overlay.classList.remove('is-visible');
+                document.body.classList.remove('sidebar-open');
+
+                openButton.setAttribute('aria-expanded', 'false');
+                overlay.setAttribute('aria-hidden', 'true');
+            }
+
+            openButton.addEventListener('click', openMenu);
+            closeButton.addEventListener('click', closeMenu);
+            overlay.addEventListener('click', closeMenu);
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeMenu();
+                }
+            });
+
+            sidebar.querySelectorAll('a.socia-nav-link, a.socia-brand')
+                .forEach((link) => {
+                    link.addEventListener('click', () => {
+                        if (mobileQuery.matches) {
+                            closeMenu();
+                        }
+                    });
+                });
+
+            mobileQuery.addEventListener('change', () => {
+                closeMenu();
+            });
+        })();
+    </script>
 </body>
 
 </html>

@@ -5,9 +5,10 @@ use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\KnowledgeBaseController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 require __DIR__ . '/auth.php';
@@ -35,9 +36,15 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
 
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
-        
+
     // Analyze Ticket untuk Administrator dan SOC Engineer
     Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])
         ->get('/tickets/analyze', [TicketController::class, 'create'])
         ->name('tickets.create');
+
+    Route::get('/tickets', [TicketController::class, 'index'])
+        ->name('tickets.index');
+
+    Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])
+        ->name('knowledge-base.index');
 });

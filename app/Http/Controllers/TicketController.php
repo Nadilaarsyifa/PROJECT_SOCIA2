@@ -13,4 +13,8 @@ class TicketController extends Controller
     {
         return view('tickets.create');
     }
+    public function index(): \Illuminate\View\View
+    {
+        return view('tickets.index');
+    }
 }
