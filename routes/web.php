@@ -38,13 +38,26 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
         ->name('profile.destroy');
 
     // Analyze Ticket untuk Administrator dan SOC Engineer
-    Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])
-        ->get('/tickets/analyze', [TicketController::class, 'create'])
+    Route::get('/tickets/analyze', [TicketController::class, 'create'])
         ->name('tickets.create');
 
+    Route::post('/tickets/analyze', [TicketController::class, 'store'])
+        ->name('tickets.store');
+
+    // Daftar semua ticket
     Route::get('/tickets', [TicketController::class, 'index'])
         ->name('tickets.index');
 
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])
         ->name('knowledge-base.index');
+
+    Route::patch('/tickets/{ticketNo}/checklist', [
+        \App\Http\Controllers\ActionChecklistController::class,
+        'update',
+    ])->name('action-checklists.update');
+
+    Route::post('/tickets/analyze/reset', [
+        \App\Http\Controllers\TicketController::class,
+        'reset',
+    ])->name('tickets.reset');
 });
