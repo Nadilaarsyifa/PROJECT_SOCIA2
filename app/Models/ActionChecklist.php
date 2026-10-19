@@ -28,6 +28,10 @@ class ActionChecklist extends Model
 
     public function aiAnalysis(): BelongsTo
     {
-        return $this->belongsTo(AIAnalysis::class, 'id_analysis', 'id_analysis');
+        return $this->belongsTo(
+            AIAnalysis::class,
+            'id_analysis',
+            'id_analysis'
+        );
     }
 }
