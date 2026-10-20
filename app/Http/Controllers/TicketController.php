@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use App\Services\TicketParser;
 use Throwable;
 
 class TicketController extends Controller
@@ -54,10 +55,10 @@ class TicketController extends Controller
         return view('tickets.create', compact('analysis', 'ticket'));
     }
 
-
     public function store(
         Request $request,
-        OllamaService $ollama
+        TicketParser $ticketParser,
+        OllamaService $ollamaService
     ): RedirectResponse {
         $request->validate([
             'raw_message' => ['required', 'string'],
@@ -67,23 +68,9 @@ class TicketController extends Controller
 
         $rawMessage = $request->input('raw_message');
 
-        // Ekstraksi informasi alert.
-        $patterns = [
-            'no_ticket' => '/^\s*\*{0,2}\s*Ticket\s+No\.?\s*:\s*\*{0,2}\s*(.+?)\s*\*{0,2}\s*$/im',
-            'offense_id' => '/^\s*\*{0,2}\s*Offense\s+ID\s*:\s*\*{0,2}\s*(.+?)\s*\*{0,2}\s*$/im',
-            'detection' => '/^\s*\*{0,2}\s*Detection\s*:\s*\*{0,2}\s*(.+?)\s*\*{0,2}\s*$/im',
-            'risk_level' => '/^\s*\*{0,2}\s*(?:Tingkat Risiko|Risk Level)\s*:\s*\*{0,2}\s*(.+?)\s*\*{0,2}\s*$/im',
-            'event_time' => '/^\s*\*{0,2}\s*(?:Waktu Kejadian|Event Time)\s*:\s*\*{0,2}\s*(.+?)\s*\*{0,2}\s*$/im',
-            'status' => '/^\s*\*{0,2}\s*Status\s*:\s*\*{0,2}\s*(.+?)\s*\*{0,2}\s*$/im',
-        ];
+        // Ekstraksi informasi alert melalui TicketParser.
+        $data = $ticketParser->parse($rawMessage);
 
-        $data = [];
-
-        foreach ($patterns as $field => $pattern) {
-            if (preg_match($pattern, $rawMessage, $matches)) {
-                $data[$field] = trim($matches[1], " \t\n\r\0\x0B*");
-            }
-        }
 
         $validator = Validator::make($data, [
             'no_ticket' => ['required', 'string', 'max:255'],
@@ -153,7 +140,7 @@ ALERT:
 {$rawMessage}
 PROMPT;
 
-            $aiResponse = $ollama->generate($prompt);
+            $aiResponse = $ollamaService->generate($prompt);
 
             // Mengantisipasi model membungkus JSON dengan code fence.
             $jsonText = preg_replace(
