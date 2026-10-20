@@ -18,17 +18,21 @@ class OllamaService
     public function generate(string $prompt): string
     {
         try {
+            $startTime = microtime(true);
             $response = Http::connectTimeout(10)
                 ->timeout(240)
                 ->post($this->baseUrl . '/api/generate', [
                     'model' => $this->model,
                     'prompt' => $prompt,
                     'stream' => false,
-                    'keep_alive' => '5m',
+                    'keep_alive' => '30m',
                     'options' => [
                         'num_predict' => 512,
                     ],
                 ]);
+            logger()->info('Waktu respons Ollama', [
+                'seconds' => round(microtime(true) - $startTime, 2),
+            ]);
         } catch (ConnectionException $e) {
             throw new RuntimeException(
                 'Ollama tidak dapat dihubungi. Pastikan Ollama sedang berjalan.'

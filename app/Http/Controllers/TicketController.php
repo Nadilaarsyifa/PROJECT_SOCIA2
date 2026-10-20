@@ -60,6 +60,7 @@ class TicketController extends Controller
         TicketParser $ticketParser,
         OllamaService $ollamaService
     ): RedirectResponse {
+        set_time_limit(180);
         $request->validate([
             'raw_message' => ['required', 'string'],
         ], [
@@ -111,34 +112,35 @@ class TicketController extends Controller
         // AI harus berhasil menghasilkan struktur yang valid
         // sebelum tiket dan hasil analisis disimpan.
         try {
+
             $prompt = <<<PROMPT
 Kamu adalah asisten analisis alert Security Operations Center (SOC).
-Analisis alert berikut untuk membantu engineer melakukan investigasi.
+Bantu engineer memahami alert dan menentukan langkah investigasi yang relevan.
 
 ATURAN:
 - Gunakan bahasa Indonesia yang jelas dan profesional.
-- Gunakan hanya informasi yang tersedia dalam alert dan pengetahuan umum keamanan yang relevan.
+- Gunakan informasi dalam alert dan pengetahuan umum keamanan yang relevan.
 - Jangan mengarang fakta, hasil pemeriksaan, atau aktivitas yang belum terbukti.
-- Bedakan indikasi dengan fakta yang terkonfirmasi.
-- Rekomendasi harus aman dan perlu ditinjau engineer.
-- Jangan menganggap suatu aktivitas pasti berbahaya hanya berdasarkan nama detection.
+- Bedakan indikasi dari fakta yang terkonfirmasi.
+- Jangan menyimpulkan aktivitas pasti berbahaya hanya berdasarkan nama detection.
+- Berikan rekomendasi yang aman dan perlu ditinjau engineer.
+- Hindari pengulangan informasi yang sama.
 - Keluarkan JSON valid saja, tanpa Markdown atau teks pembuka.
-- Gunakan struktur JSON persis seperti ini:
+- Gunakan struktur JSON berikut secara persis:
 {
-  "summary": "Ringkasan alert",
+  "summary": "Ringkasan alert dalam 2-3 kalimat",
   "attention_points": [
-    "Poin perhatian pertama",
-    "Poin perhatian kedua"
+    "Maksimal 3 poin perhatian yang spesifik dan relevan"
   ],
   "handling_steps": [
-    "Langkah penanganan pertama",
-    "Langkah penanganan kedua"
+    "Maksimal 4 langkah investigasi yang praktis dan aman"
   ]
 }
 
 ALERT:
 {$rawMessage}
 PROMPT;
+
 
             $aiResponse = $ollamaService->generate($prompt);
 
