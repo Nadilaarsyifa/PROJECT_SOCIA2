@@ -234,12 +234,52 @@ PROMPT;
         ]);
     }
 
-    public function index(): View
+
+    public function index(Request $request): View
     {
-        $tickets = Ticket::with('user')
+        $query = Ticket::with('user');
+
+        // Pencarian berdasarkan nomor tiket atau detection.
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+
+            $query->where(function ($q) use ($search) {
+                $q->where('no_ticket', 'like', "%{$search}%")
+                    ->orWhere('detection', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter berdasarkan tanggal kejadian.
+        if ($request->filled('event_date')) {
+            $request->validate([
+                'event_date' => ['date_format:Y-m-d'],
+            ]);
+
+            $eventDate = $request->input('event_date');
+
+            $query->whereDate('event_time', $eventDate);
+        }
+
+        // Tampilkan 10 tiket per halaman.
+        $tickets = $query
             ->orderByDesc('inserted_at')
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
 
         return view('tickets.index', compact('tickets'));
+    }
+
+
+    public function destroy(string $no_ticket): RedirectResponse
+    {
+        $ticket = Ticket::findOrFail($no_ticket);
+
+        DB::transaction(function () use ($ticket) {
+            $ticket->delete();
+        });
+
+        return redirect()
+            ->route('tickets.index')
+            ->with('success', 'Ticket berhasil dihapus.');
     }
 }

@@ -20,11 +20,17 @@ Route::get('/dashboard', function () {
     ->middleware(['auth', 'role.check:Administrator,SOC Engineer'])
     ->name('dashboard');
 
-// Kelola User hanya dapat diakses Administrator
+
+// Kelola User dan Delete Ticket hanya dapat diakses Administrator
 Route::middleware(['auth', 'role.check:Administrator'])->group(function () {
     Route::get('/admin/users', [UserManagementController::class, 'index'])
         ->name('admin.users.index');
+
+    // Hapus ticket
+    Route::delete('/tickets/{ticketNo}', [TicketController::class, 'destroy'])
+        ->name('tickets.destroy');
 });
+
 
 // Profile dapat diakses kedua role yang sudah login
 Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(function () {
