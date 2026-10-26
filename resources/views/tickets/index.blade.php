@@ -338,13 +338,17 @@
                                 </td>
 
                                 <td class="text-center text-nowrap">
-                                    <div class="d-inline-flex gap-1">
+                                    <div class="d-inline-flex gap-2">
+                                        <!-- Tombol Detail -->
                                         <a href="{{ route('tickets.create', ['ticket' => $ticket->no_ticket]) }}"
-                                            class="btn btn-sm btn-action-view"
+                                            class="btn btn-info text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
+                                            style="min-width: 65px; line-height: 1.2; font-size: 0.75rem; background-color: #00c4cc; border: none;"
                                             title="Lihat detail ticket">
-                                            <i class="bi bi-eye me-1"></i> Detail
+                                            <i class="bi bi-eye-fill mb-1" style="font-size: 1.1rem;"></i>
+                                            <span>Detail</span>
                                         </a>
 
+                                        <!-- Tombol Hapus (Hanya untuk Administrator) -->
                                         @if (auth()->user()?->hasRole('Administrator'))
                                         <form action="{{ route('tickets.destroy', $ticket->no_ticket) }}"
                                             method="POST"
@@ -354,9 +358,11 @@
                                             @method('DELETE')
 
                                             <button type="submit"
-                                                class="btn btn-sm btn-outline-danger"
+                                                class="btn btn-danger text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
+                                                style="min-width: 65px; line-height: 1.2; font-size: 0.75rem;"
                                                 title="Hapus ticket">
-                                                <i class="bi bi-trash"></i>
+                                                <i class="bi bi-trash-fill mb-1" style="font-size: 1.1rem;"></i>
+                                                <span>Hapus</span>
                                             </button>
                                         </form>
                                         @endif

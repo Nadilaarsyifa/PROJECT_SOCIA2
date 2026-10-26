@@ -97,52 +97,52 @@
     <div class="users-page">
         {{-- Notifikasi --}}
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
-                <i class="bi bi-check-circle me-2"></i>
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+        </div>
         @endif
 
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+        </div>
         @endif
 
         {{-- Notifikasi Password Sementara --}}
         @if (session('temporary_password'))
-            <div class="alert alert-warning border-warning rounded-3 mb-4" role="alert">
-                <div class="d-flex align-items-start gap-3">
-                    <i class="bi bi-key-fill fs-4 text-warning"></i>
+        <div class="alert alert-warning border-warning rounded-3 mb-4" role="alert">
+            <div class="d-flex align-items-start gap-3">
+                <i class="bi bi-key-fill fs-4 text-warning"></i>
 
-                    <div class="flex-grow-1">
-                        <h6 class="fw-bold mb-1">Reset Password Berhasil</h6>
+                <div class="flex-grow-1">
+                    <h6 class="fw-bold mb-1">Reset Password Berhasil</h6>
 
-                        <p class="small mb-2">
-                            Password sementara untuk
-                            <strong>{{ session('temporary_username', session('username', 'pengguna')) }}</strong>:
-                        </p>
+                    <p class="small mb-2">
+                        Password sementara untuk
+                        <strong>{{ session('temporary_username', session('username', 'pengguna')) }}</strong>:
+                    </p>
 
-                        <div class="d-flex flex-wrap align-items-center gap-2">
-                            <code id="temporaryPassword"
-                                class="fs-6 fw-bold bg-white px-3 py-2 rounded border text-dark">{{ session('temporary_password') }}</code>
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <code id="temporaryPassword"
+                            class="fs-6 fw-bold bg-white px-3 py-2 rounded border text-dark">{{ session('temporary_password') }}</code>
 
-                            <button type="button"
-                                class="btn btn-sm btn-outline-dark"
-                                onclick="navigator.clipboard.writeText(document.getElementById('temporaryPassword').innerText).then(() => { this.innerHTML = '<i class=\'bi bi-check2\'></i> Tersalin'; }).catch(() => alert('Gagal menyalin. Silakan salin password secara manual.'));">
-                                <i class="bi bi-clipboard"></i> Salin Password
-                            </button>
-                        </div>
-
-                        <p class="small mt-2 mb-0 text-secondary">
-                            Sampaikan password ini kepada pengguna melalui saluran yang aman.
-                        </p>
+                        <button type="button"
+                            class="btn btn-sm btn-outline-dark"
+                            onclick="navigator.clipboard.writeText(document.getElementById('temporaryPassword').innerText).then(() => { this.innerHTML = '<i class=\'bi bi-check2\'></i> Tersalin'; }).catch(() => alert('Gagal menyalin. Silakan salin password secara manual.'));">
+                            <i class="bi bi-clipboard"></i> Salin Password
+                        </button>
                     </div>
+
+                    <p class="small mt-2 mb-0 text-secondary">
+                        Sampaikan password ini kepada pengguna melalui saluran yang aman.
+                    </p>
                 </div>
             </div>
+        </div>
         @endif
 
         <div class="card user-card bg-white">
@@ -176,86 +176,94 @@
 
                         <tbody>
                             @forelse ($users as $user)
-                                <tr>
-                                    <td class="text-center fw-semibold text-secondary">
-                                        {{ $loop->iteration }}
-                                    </td>
+                            <tr>
+                                <td class="text-center fw-semibold text-secondary">
+                                    {{ $loop->iteration }}
+                                </td>
 
-                                    <td>
-                                        <span class="fw-bold text-dark">
-                                            {{ $user->nama }}
-                                        </span>
-                                    </td>
+                                <td>
+                                    <span class="fw-bold text-dark">
+                                        {{ $user->nama }}
+                                    </span>
+                                </td>
 
-                                    <td>
-                                        <span class="text-secondary font-monospace">
-                                            {{ $user->username }}
-                                        </span>
-                                    </td>
+                                <td>
+                                    <span class="text-secondary font-monospace">
+                                        {{ $user->username }}
+                                    </span>
+                                </td>
 
-                                    <td class="text-center">
-                                        @php
-                                            $roles = $user->getRoleNames();
-                                        @endphp
-                                        @if ($roles->isNotEmpty())
-                                            @foreach ($roles as $role)
-                                                @php
-                                                    $roleClass = match (strtolower($role)) {
-                                                        'administrator', 'admin' => 'role-admin',
-                                                        'soc engineer', 'engineer' => 'role-engineer',
-                                                        default => '',
-                                                    };
-                                                @endphp
-                                                <span class="role-badge {{ $roleClass }} me-1">
-                                                    {{ $role }}
-                                                </span>
-                                            @endforeach
-                                        @else
-                                            <span class="role-badge">Belum ada role</span>
+                                <td class="text-center">
+                                    @php
+                                    $roles = $user->getRoleNames();
+                                    @endphp
+                                    @if ($roles->isNotEmpty())
+                                    @foreach ($roles as $role)
+                                    @php
+                                    $roleClass = match (strtolower($role)) {
+                                    'administrator', 'admin' => 'role-admin',
+                                    'soc engineer', 'engineer' => 'role-engineer',
+                                    default => '',
+                                    };
+                                    @endphp
+                                    <span class="role-badge {{ $roleClass }} me-1">
+                                        {{ $role }}
+                                    </span>
+                                    @endforeach
+                                    @else
+                                    <span class="role-badge">Belum ada role</span>
+                                    @endif
+                                </td>
+
+                                <td class="text-center text-nowrap">
+                                    <div class="d-inline-flex gap-2">
+                                        <!-- Tombol Reset Password -->
+                                        <form action="{{ route('users.reset-password', $user->getKey()) }}"
+                                            method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Reset password pengguna ini?')">
+                                            @csrf
+                                            <button type="submit"
+                                                class="btn btn-info text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
+                                                style="min-width: 65px; line-height: 1.2; font-size: 0.75rem; background-color: #00c4cc; border: none;">
+                                                <i class="bi bi-key-fill mb-1" style="font-size: 1.1rem;"></i>
+                                                <span>Reset</span>
+                                            </button>
+                                        </form>
+
+                                        <!-- Tombol Hapus -->
+                                        @if (!auth()->user()->is($user))
+                                        <form action="{{ route('users.destroy', $user->getKey()) }}"
+                                            method="POST"
+                                            class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-danger text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
+                                                style="min-width: 65px; line-height: 1.2; font-size: 0.75rem;">
+                                                <i class="bi bi-trash-fill mb-1" style="font-size: 1.1rem;"></i>
+                                                <span>Hapus</span>
+                                            </button>
+                                        </form>
                                         @endif
-                                    </td>
-
-                                    <td class="text-center text-nowrap">
-                                        <div class="d-inline-flex gap-1">
-                                            <form action="{{ route('users.reset-password', $user->getKey()) }}"
-                                                method="POST"
-                                                class="d-inline"
-                                                onsubmit="return confirm('Reset password pengguna ini?')">
-                                                @csrf
-                                                <button type="submit" class="btn btn-sm btn-outline-success">
-                                                    <i class="bi bi-key"></i> Reset Password
-                                                </button>
-                                            </form>
-
-                                            @if (!auth()->user()->is($user))
-                                                <form action="{{ route('users.destroy', $user->getKey()) }}"
-                                                    method="POST"
-                                                    class="d-inline"
-                                                    onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                        <i class="bi bi-trash"></i> Hapus
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </div>
+                                </td>
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5">
-                                        <div class="empty-state">
-                                            <div class="empty-icon">
-                                                <i class="bi bi-people"></i>
-                                            </div>
-                                            <h6 class="fw-bold mt-3 mb-2">Belum ada pengguna</h6>
-                                            <p class="text-secondary small mb-0">
-                                                Pengguna yang terdaftar akan ditampilkan di tabel ini.
-                                            </p>
+                            <tr>
+                                <td colspan="5">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">
+                                            <i class="bi bi-people"></i>
                                         </div>
-                                    </td>
-                                </tr>
+                                        <h6 class="fw-bold mt-3 mb-2">Belum ada pengguna</h6>
+                                        <p class="text-secondary small mb-0">
+                                            Pengguna yang terdaftar akan ditampilkan di tabel ini.
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
