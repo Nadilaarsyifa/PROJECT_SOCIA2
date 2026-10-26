@@ -21,15 +21,31 @@ Route::get('/dashboard', function () {
     ->name('dashboard');
 
 
+
 // Kelola User dan Delete Ticket hanya dapat diakses Administrator
+
 Route::middleware(['auth', 'role.check:Administrator'])->group(function () {
+    // Daftar user
     Route::get('/admin/users', [UserManagementController::class, 'index'])
         ->name('admin.users.index');
+
+    // Reset password
+    Route::post('/admin/users/{user}/reset-password', [
+        UserManagementController::class,
+        'resetPassword',
+    ])->name('users.reset-password');
+
+    // Hapus user
+    Route::delete('/admin/users/{user}', [
+        UserManagementController::class,
+        'destroy',
+    ])->name('users.destroy');
 
     // Hapus ticket
     Route::delete('/tickets/{ticketNo}', [TicketController::class, 'destroy'])
         ->name('tickets.destroy');
 });
+
 
 
 // Profile dapat diakses kedua role yang sudah login
