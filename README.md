@@ -1,68 +1,88 @@
-# Sistem Asisten Analisis Alert SOC Berbasis AI
+# Sistem Asisten Analisis Alert SOC Berbasis AI (SOCIA)
 
 ## Deskripsi
 
-Sistem Asisten Analisis Alert SOC Berbasis AI (SOCIA) merupakan aplikasi berbasis web yang dikembangkan untuk membantu SOC Engineer memahami dan menangani alert keamanan dari Magnus secara lebih cepat dan terstruktur.
+**Sistem Asisten Analisis Alert SOC Berbasis AI (SOCIA)** merupakan aplikasi berbasis web yang dikembangkan untuk membantu Security Operations Center (SOC) Engineer memahami dan menangani alert keamanan dari Magnus secara lebih cepat dan terstruktur.
 
-Aplikasi menerima pesan alert melalui input teks, menyimpan informasi tiket, dan dirancang untuk memanfaatkan model AI lokal guna menghasilkan ringkasan alert, poin perhatian, serta rekomendasi langkah penanganan berdasarkan alert dan SOP yang relevan.
+Aplikasi menerima pesan alert melalui input teks, mengekstraksi informasi penting, menyimpan data tiket, dan memanfaatkan model AI lokal untuk membantu menghasilkan ringkasan alert, poin yang perlu diperhatikan, serta rekomendasi langkah penanganan yang relevan.
 
-Hasil analisis AI digunakan sebagai panduan bagi SOC Engineer, bukan untuk menggantikan penilaian dan keputusan engineer. Engineer tetap melakukan pemeriksaan dan menentukan hasil investigasi.
+Hasil analisis AI digunakan sebagai panduan bagi SOC Engineer, bukan untuk menggantikan penilaian dan keputusan engineer. Engineer tetap bertanggung jawab untuk memeriksa hasil analisis, menjalankan langkah investigasi yang sesuai, dan menentukan hasil akhir penanganan alert.
 
 ## Teknologi
 
-- **Backend:** Laravel 12, PHP 8.2
-- **Frontend:** Laravel Blade, Bootstrap (integrasi tampilan masih dalam pengembangan)
-- **Database:** MySQL/MariaDB
-- **AI:** Gemma 3:4b melalui Ollama
-- **Authentication:** Laravel Breeze
-- **Authorization:** Spatie Laravel Permission
-- **Version Control:** Git dan GitHub
-- **Development Environment:** XAMPP, Composer, Node.js dan npm
+| Komponen | Teknologi |
+|---|---|
+| Backend | Laravel 12, PHP 8.2 |
+| Frontend | Laravel Blade, Bootstrap |
+| Ikon antarmuka | Bootstrap Icons |
+| Database | MySQL/MariaDB |
+| AI lokal | Gemma 3:4b melalui Ollama |
+| Authentication | Laravel Breeze |
+| Authorization | Spatie Laravel Permission |
+| Ekspor Excel | Maatwebsite Laravel Excel |
+| Version Control | Git dan GitHub |
+| Development Environment | XAMPP, Composer, Node.js dan npm |
 
 ## Role Pengguna
 
-Aplikasi dirancang dengan dua role utama:
+SOCIA dirancang dengan dua role utama.
 
 ### 1. Administrator
 
-Administrator memiliki akses ke fitur operasional serta fitur administrasi, meliputi:
+Administrator memiliki akses terhadap fitur operasional dan administrasi, meliputi:
+
+- Mengakses dashboard dan fitur operasional SOCIA.
+- Melihat dan mengelola tiket SOC sesuai hak akses.
 - Mengelola akun SOC Engineer.
-- Mengelola Knowledge Base dan SOP.
-- Mengakses fitur operasional SOCIA.
+- Mengelola Knowledge Base dan SOP setelah fitur tersebut tersedia.
 
 ### 2. SOC Engineer
 
-SOC Engineer memiliki akses ke fitur operasional, meliputi:
-- Memasukkan dan mengelola tiket SOC.
+SOC Engineer memiliki akses terhadap fitur operasional, meliputi:
+
+- Memasukkan dan meninjau tiket SOC.
 - Melakukan analisis alert menggunakan AI.
+- Meninjau ringkasan alert dan poin yang perlu diperhatikan.
 - Meninjau rekomendasi dan action checklist.
-- Melakukan verifikasi serta mencatat hasil investigasi.
-- Melihat dan mencetak laporan investigasi.
+- Melakukan verifikasi dan mencatat hasil investigasi.
+- Melihat dan mencetak laporan investigasi setelah fitur laporan tersedia.
+- Melihat daftar tiket dan mengekspor data tiket ke Excel.
 
 SOC Engineer tidak memiliki akses ke fitur Kelola User dan Kelola Knowledge Base.
 
 ## Fitur Aplikasi
 
-Fitur yang dikembangkan dan direncanakan meliputi:
+### Fitur yang Telah Dikembangkan
 
-1. Login dan autentikasi pengguna.
-2. Pengelolaan role dan hak akses.
-3. Pengelolaan tiket SOC.
-4. Analisis alert menggunakan AI.
-5. Ringkasan alert dan poin perhatian.
-6. Rekomendasi langkah penanganan berdasarkan alert dan SOP.
-7. Action checklist untuk memantau langkah penanganan.
-8. Engineer review dan hasil investigasi.
-9. Knowledge Base berbasis SOP.
-10. Dashboard dan tabel seluruh tiket.
-11. Cetak laporan investigasi.
-12. Ekspor seluruh tiket ke Excel.
+- **Login dan autentikasi pengguna** menggunakan Laravel Breeze.
+- **Role dan hak akses** untuk Administrator dan SOC Engineer.
+- **Dashboard** untuk mengakses informasi dan fitur operasional.
+- **Pengelolaan tiket SOC**, termasuk melihat detail tiket.
+- **Halaman All Tickets** untuk menampilkan daftar tiket yang tersimpan.
+- **Pencarian tiket otomatis** berdasarkan kata kunci dan filter tanggal kejadian.
+- **Penghapusan tiket** khusus Administrator.
+- **Analisis alert berbantuan AI** untuk membantu memahami informasi alert.
+- **Ringkasan alert dan poin yang perlu diperhatikan** sebagai bagian dari hasil analisis.
+- **Rekomendasi langkah penanganan dan action checklist** untuk membantu proses investigasi.
+- **Pengelolaan akun pengguna** melalui halaman Kelola User.
+- **Ekspor tiket ke Excel** dengan pilihan tahun dan bulan melalui modal popup tanpa perlu berpindah halaman.
+
+### Fitur yang Direncanakan atau Masih Perlu Diselesaikan
+
+- Penyempurnaan dan pengujian integrasi AI lokal melalui Ollama.
+- Penyempurnaan rekomendasi penanganan berdasarkan Knowledge Base dan SOP.
+- Penyempurnaan engineer review dan pencatatan hasil akhir investigasi.
+- Pengembangan pengelolaan Knowledge Base dan SOP melalui antarmuka aplikasi.
+- Pengembangan dan penyempurnaan cetak laporan investigasi.
+- Pengujian menyeluruh seluruh fitur dan pembatasan hak akses.
+- Pengujian instalasi dari awal pada lingkungan baru.
+- Penyelesaian dokumentasi teknis proyek.
 
 ## Progres Pengembangan
 
 ### Fondasi Aplikasi
 
-- [x] Inisialisasi project Laravel.
+- [x] Inisialisasi proyek Laravel.
 - [x] Inisialisasi Git dan repository GitHub.
 - [x] Konfigurasi lingkungan pengembangan.
 - [x] Perancangan struktur database.
@@ -72,106 +92,180 @@ Fitur yang dikembangkan dan direncanakan meliputi:
 - [x] Konfigurasi autentikasi menggunakan Laravel Breeze.
 - [x] Konfigurasi role Administrator dan SOC Engineer.
 - [x] Konfigurasi middleware pembatasan akses berdasarkan role.
-- [x] Pengujian akses halaman khusus Administrator.
-- [x] Pembuatan controller dan halaman awal Kelola User.
+- [x] Pengembangan awal halaman Kelola User.
 
 ### Pengembangan Fitur
 
-- [ ] Penyelesaian layout utama aplikasi.
-- [ ] Pengembangan Dashboard.
-- [ ] Pengembangan fitur input dan pengelolaan tiket.
-- [ ] Integrasi model AI lokal melalui Ollama.
-- [ ] Pengembangan analisis dan rekomendasi penanganan alert.
-- [ ] Pengembangan action checklist.
-- [ ] Pengembangan engineer review dan hasil investigasi.
-- [ ] Pengembangan Knowledge Base dan pengelolaan SOP.
-- [ ] Pengembangan cetak laporan dan ekspor Excel.
+- [x] Pengembangan halaman All Tickets.
+- [x] Pencarian otomatis dan filter tanggal kejadian.
+- [x] Fitur penghapusan tiket dengan pembatasan role.
+- [x] Fitur ekspor tiket ke Excel.
+- [x] Filter ekspor berdasarkan tahun dan bulan.
+- [x] Modal popup untuk pemilihan periode ekspor.
+- [x] Pemformatan laporan Excel agar lebih mudah dibaca.
+- [ ] Penyempurnaan layout utama dan konsistensi antarmuka.
+- [ ] Penyempurnaan Dashboard.
+- [ ] Penyempurnaan integrasi dan pengujian AI lokal.
+- [ ] Penyempurnaan action checklist dan hasil investigasi.
+- [ ] Pengembangan antarmuka Knowledge Base dan pengelolaan SOP.
+- [ ] Penyelesaian cetak laporan investigasi.
 - [ ] Pengujian seluruh fitur dan hak akses.
 - [ ] Pengujian instalasi dari awal.
 - [ ] Penyelesaian dokumentasi proyek.
 
-## Menjalankan Project
+> **Catatan progres:** Checklist di atas merupakan ringkasan pengembangan. Status akhir setiap fitur perlu disesuaikan dengan implementasi dan hasil pengujian terbaru.
 
-### Persyaratan
+## Persyaratan Sistem
 
 Pastikan perangkat telah memiliki:
-- PHP 8.2 atau versi yang kompatibel dengan dependensi project.
+
+- PHP 8.2 atau versi yang sesuai dengan dependensi proyek.
 - Composer.
 - Node.js dan npm.
-- MySQL/MariaDB, misalnya melalui XAMPP.
+- MySQL atau MariaDB, misalnya melalui XAMPP.
 - Git.
 
-Untuk menjalankan fitur AI nantinya, Ollama dan model Gemma 3:4b juga perlu disiapkan.
+Untuk menjalankan fitur analisis AI lokal, siapkan juga:
 
-### Instalasi
+- Ollama.
+- Model Gemma 3:4b yang telah diunduh melalui Ollama.
 
-1. Clone repository:
+## Instalasi dan Menjalankan Project
 
-   ```bash
-   git clone https://github.com/Nadilaarsyifa/PROJECT_SOCIA2.git
-   cd PROJECT_SOCIA2
-   ```
+### 1. Clone Repository
 
-2. Instal dependensi PHP:
+```bash
+git clone https://github.com/Nadilaarsyifa/PROJECT_SOCIA2.git
+cd PROJECT_SOCIA2
+```
 
-   ```bash
-   composer install
-   ```
+### 2. Instal Dependensi PHP
 
-3. Salin `.env.example` menjadi `.env`.
+```bash
+composer install
+```
 
-   ```bash
-   copy .env.example .env
-   ```
+### 3. Konfigurasi Environment
 
-4. Sesuaikan konfigurasi database pada `.env`, termasuk nama database, username, dan password.
+Salin file `.env.example` menjadi `.env`.
 
-5. Buat database sesuai konfigurasi tersebut melalui MySQL atau phpMyAdmin.
+Pada Windows PowerShell:
 
-6. Buat application key:
+```powershell
+Copy-Item .env.example .env
+```
 
-   ```bash
-   php artisan key:generate
-   ```
+Sesuaikan konfigurasi database di dalam file `.env`, misalnya:
 
-7. Instal dependensi frontend:
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=soc_ticket_ai
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-   ```bash
-   npm install
-   ```
+Sesuaikan nama database, username, dan password dengan konfigurasi lokal masing-masing.
 
-8. Jalankan migration:
+### 4. Buat Application Key
 
-   ```bash
-   php artisan migrate
-   ```
+```bash
+php artisan key:generate
+```
 
-9. Isi data awal role dan permission:
+### 5. Buat Database
 
-   ```bash
-   php artisan db:seed --class=RoleSeeder
-   ```
+Buat database sesuai nilai `DB_DATABASE` pada file `.env` melalui phpMyAdmin atau MySQL/MariaDB.
 
-   Jika seeder pengguna sudah tersedia dan dikonfigurasi melalui `DatabaseSeeder`, jalankan juga seeder pengguna sesuai konfigurasi project.
+### 6. Instal Dependensi Frontend
 
-10. Jalankan aplikasi:
+```bash
+npm install
+```
 
-    ```bash
-    php artisan serve
-    ```
+### 7. Jalankan Migration
 
-11. Jika diperlukan, jalankan kompilasi aset frontend:
+```bash
+php artisan migrate
+```
 
-    ```bash
-    npm run dev
-    ```
+### 8. Isi Data Awal Role dan Permission
 
-Aplikasi dapat diakses melalui:
+Jika seeder tersedia dan telah dikonfigurasi untuk membuat role serta permission:
 
-`http://127.0.0.1:8000`
+```bash
+php artisan db:seed --class=RoleSeeder
+```
 
-## Catatan
+Jika proyek memiliki seeder pengguna awal, jalankan seeder tersebut sesuai konfigurasi proyek.
 
-Project masih dalam tahap pengembangan. Autentikasi, konfigurasi role dan permission, pembatasan akses halaman, serta halaman awal Kelola User telah dikerjakan. Integrasi AI dan fitur operasional lainnya akan diselesaikan secara bertahap.
+**Catatan:** Periksa isi seeder sebelum menjalankannya kembali pada database yang sudah berisi data.
 
-Untuk keamanan, jangan memasukkan file `.env`, password, atau kredensial pribadi ke repository GitHub.
+### 9. Siapkan Model AI Lokal
+
+Jika fitur AI telah dikonfigurasi untuk menggunakan Ollama, jalankan Ollama dan pastikan model Gemma 3:4b tersedia.
+
+Untuk mengunduh model jika belum tersedia:
+
+```bash
+ollama pull gemma3:4b
+```
+
+Nama model dan alamat layanan Ollama harus sesuai dengan konfigurasi yang digunakan aplikasi.
+
+### 10. Jalankan Aplikasi
+
+Jalankan server Laravel:
+
+```bash
+php artisan serve
+```
+
+Jika diperlukan, jalankan kompilasi aset frontend pada terminal terpisah:
+
+```bash
+npm run dev
+```
+
+Buka aplikasi melalui alamat berikut:
+
+http://127.0.0.1:8000
+
+## Struktur Direktori Utama
+
+```text
+PROJECT_SOCIA2/
+├── app/
+│   ├── Exports/
+│   ├── Http/
+│   │   └── Controllers/
+│   └── Models/
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── resources/
+│   └── views/
+│       └── tickets/
+├── routes/
+│   └── web.php
+├── .env.example
+├── composer.json
+├── package.json
+└── README.md
+```
+
+Struktur di atas merupakan gambaran direktori utama yang relevan dengan fitur aplikasi. Direktori dan file lain tetap mengikuti struktur proyek Laravel.
+
+## Keamanan
+
+- Jangan mengunggah file `.env` ke repository.
+- Jangan menyimpan password atau kredensial pribadi dalam kode sumber.
+- Pastikan route dan halaman dibatasi berdasarkan role pengguna.
+- Verifikasi rekomendasi AI sebelum melakukan tindakan terhadap alert keamanan.
+- Gunakan data uji yang aman ketika menguji fitur analisis dan investigasi.
+
+## Status Proyek
+
+SOCIA masih dalam tahap pengembangan bertahap. Fondasi Laravel, autentikasi, pembatasan hak akses, pengelolaan tiket, analisis berbantuan AI, dan fitur ekspor Excel telah menjadi bagian dari pengembangan aplikasi. Penyempurnaan fitur, pengujian integrasi, dan dokumentasi teknis tetap dilakukan sesuai perkembangan implementasi.
+
