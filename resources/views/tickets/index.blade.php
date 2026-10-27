@@ -195,15 +195,116 @@
                             <h5 class="page-title fw-bold mb-1">
                                 Daftar Ticket
                             </h5>
-                            <p class="text-secondary small mb-0">
-                                Cari dan tinjau alert keamanan yang tersimpan.
-                            </p>
                         </div>
 
-                        <a href="{{ route('tickets.create') }}" class="btn btn-success px-3 fw-semibold">
-                            <i class="bi bi-plus-lg me-1"></i>
-                            Analisis Alert
-                        </a>
+                        {{-- Container Tombol Aksi (Kanan) --}}
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button"
+                                class="btn btn-success fw-semibold"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exportExcelModal" >
+                                Export Excel
+                            </button>
+
+                            <!-- Tombol Analisis Alert (Tetap di posisi kanan) -->
+                            <a href="{{ route('tickets.create') }}" class="btn btn-success px-3 fw-semibold">
+                                <i class="bi bi-plus-lg me-1"></i>
+                                Analisis Alert
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Modal Export Excel --}}
+                <div class="modal fade" id="exportExcelModal" tabindex="-1"
+                    aria-labelledby="exportExcelModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 rounded-4 shadow">
+
+                            <div class="modal-header border-bottom px-4 py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-3 p-2"
+                                        style="background: #dcfce7; color: #166534;">
+                                    </div>
+                                    <div>
+                                        <h5 class="modal-title fw-bold mb-1"
+                                            id="exportExcelModalLabel"
+                                            style="color: #0F3B2C;">
+                                            Export Excel
+                                        </h5>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+
+                            <form action="{{ route('tickets.export') }}" method="GET">
+                                <div class="modal-body p-4">
+
+                                    <div class="mb-3">
+                                        <label for="export_year"
+                                            class="form-label fw-semibold">
+                                            Tahun
+                                        </label>
+
+                                        <select name="year" id="export_year"
+                                            class="form-select" required>
+                                            @forelse ($years as $year)
+                                                <option value="{{ $year }}"
+                                                    @selected((int) $year === (int) $years->first())>
+                                                    {{ $year }}
+                                                </option>
+                                            @empty
+                                                <option value="">Tidak ada data tahun</option>
+                                            @endforelse
+                                        </select>
+
+                                    </div>
+
+                                    <div>
+                                        <label for="export_month"
+                                            class="form-label fw-semibold">
+                                            Bulan
+                                        </label>
+
+                                        <select name="month" id="export_month"
+                                            class="form-select">
+                                            <option value="">All Bulan</option>
+                                            <option value="1">Januari</option>
+                                            <option value="2">Februari</option>
+                                            <option value="3">Maret</option>
+                                            <option value="4">April</option>
+                                            <option value="5">Mei</option>
+                                            <option value="6">Juni</option>
+                                            <option value="7">Juli</option>
+                                            <option value="8">Agustus</option>
+                                            <option value="9">September</option>
+                                            <option value="10">Oktober</option>
+                                            <option value="11">November</option>
+                                            <option value="12">Desember</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="modal-footer border-top px-4 py-3">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary"
+                                        data-bs-dismiss="modal">
+                                        Batal
+                                    </button>
+
+                                    <button type="submit" class="btn btn-success"
+                                        {{ $years->isEmpty() ? 'disabled' : '' }}>
+                                        <i class="bi bi-download me-1"></i>
+                                        Export Excel
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
                     </div>
                 </div>
 

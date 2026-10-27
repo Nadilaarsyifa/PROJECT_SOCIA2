@@ -70,6 +70,10 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
     Route::get('/tickets', [TicketController::class, 'index'])
         ->name('tickets.index');
 
+    Route::get('/tickets/export/download', [TicketController::class, 'export'])
+        ->name('tickets.export');
+
+
     Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])
         ->name('knowledge-base.index');
 

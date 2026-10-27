@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use App\Services\TicketParser;
 use Throwable;
+use App\Exports\AllTicketsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TicketController extends Controller
 {
@@ -72,7 +74,6 @@ class TicketController extends Controller
         // Ekstraksi informasi alert melalui TicketParser.
         $data = $ticketParser->parse($rawMessage);
 
-
         $validator = Validator::make($data, [
             'no_ticket' => ['required', 'string', 'max:255'],
             'detection' => ['required', 'string', 'max:255'],
@@ -112,7 +113,6 @@ class TicketController extends Controller
         // AI harus berhasil menghasilkan struktur yang valid
         // sebelum tiket dan hasil analisis disimpan.
         try {
-
             $prompt = <<<PROMPT
 Kamu adalah asisten analisis alert Security Operations Center (SOC).
 Bantu engineer memahami alert dan menentukan langkah investigasi yang relevan.
@@ -140,7 +140,6 @@ ATURAN:
 ALERT:
 {$rawMessage}
 PROMPT;
-
 
             $aiResponse = $ollamaService->generate($prompt);
 
@@ -234,7 +233,6 @@ PROMPT;
         ]);
     }
 
-
     public function index(Request $request): View
     {
         $query = Ticket::with('user');
@@ -266,9 +264,52 @@ PROMPT;
             ->paginate(10)
             ->withQueryString();
 
-        return view('tickets.index', compact('tickets'));
+        // Ambil daftar tahun unik dari event_time untuk modal Export Excel
+        $years = Ticket::query()
+            ->whereNotNull('event_time')
+            ->selectRaw('YEAR(event_time) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year');
+
+        return view('tickets.index', compact('tickets', 'years'));
     }
 
+    public function export(Request $request)
+    {
+        $years = Ticket::query()
+            ->whereNotNull('event_time')
+            ->selectRaw('YEAR(event_time) as year')
+            ->distinct()
+            ->pluck('year')
+            ->map(fn ($year) => (int) $year)
+            ->all();
+
+        $request->validate([
+            'year' => [
+                'required',
+                'integer',
+                \Illuminate\Validation\Rule::in($years),
+            ],
+            'month' => ['nullable', 'integer', 'between:1,12'],
+        ]);
+
+        $year = (int) $request->input('year');
+        $month = $request->filled('month')
+            ? (int) $request->input('month')
+            : null;
+
+        $fileName = 'SOCIA2_Tickets_' . $year;
+
+        if ($month !== null) {
+            $fileName .= '_' . sprintf('%02d', $month);
+        }
+
+        return Excel::download(
+            new AllTicketsExport($year, $month),
+            $fileName . '.xlsx'
+        );
+    }
 
     public function destroy(string $no_ticket): RedirectResponse
     {
