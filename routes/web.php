@@ -1,4 +1,3 @@
-
 <?php
 
 use App\Http\Controllers\UserManagementController;
@@ -22,8 +21,7 @@ Route::get('/dashboard', function () {
 
 
 
-// Kelola User dan Delete Ticket hanya dapat diakses Administrator
-
+// Kelola User, Delete Ticket, dan Kelola Knowledge Base hanya dapat diakses Administrator
 Route::middleware(['auth', 'role.check:Administrator'])->group(function () {
     // Daftar user
     Route::get('/admin/users', [UserManagementController::class, 'index'])
@@ -44,11 +42,35 @@ Route::middleware(['auth', 'role.check:Administrator'])->group(function () {
     // Hapus ticket
     Route::delete('/tickets/{ticketNo}', [TicketController::class, 'destroy'])
         ->name('tickets.destroy');
+
+    // Knowledge Base hanya untuk Administrator
+    Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])
+        ->name('knowledge-base.index');
+
+    Route::get('/knowledge-base/{id}', [
+        KnowledgeBaseController::class,
+        'show',
+    ])->name('knowledge-base.show');
+
+    // Hapus referensi Knowledge Base
+    Route::delete('/knowledge-base/{id}', [
+        KnowledgeBaseController::class,
+        'destroy',
+    ])->name('knowledge-base.destroy');
+
+    Route::get('/knowledge-base/template/download', [
+        KnowledgeBaseController::class,
+        'downloadTemplate',
+    ])->name('knowledge-base.template');
+    Route::post('/knowledge-base/import', [
+        KnowledgeBaseController::class,
+        'import',
+    ])->name('knowledge-base.import');
 });
 
 
 
-// Profile dapat diakses kedua role yang sudah login
+// Profile dan Ticket dapat diakses kedua role yang sudah login
 Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
@@ -72,10 +94,6 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
 
     Route::get('/tickets/export/download', [TicketController::class, 'export'])
         ->name('tickets.export');
-
-
-    Route::get('/knowledge-base', [KnowledgeBaseController::class, 'index'])
-        ->name('knowledge-base.index');
 
     Route::patch('/tickets/{ticketNo}/checklist', [
         \App\Http\Controllers\ActionChecklistController::class,

@@ -557,7 +557,7 @@
                     <span class="socia-nav-icon">
                         <i class="bi bi-journal-text"></i>
                     </span>
-                    Knowledge Base / SOP
+                    Knowledge Base
                 </a>
 
                 @endif
