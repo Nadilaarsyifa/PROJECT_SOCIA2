@@ -27,12 +27,14 @@
         }
 
         .kb-page .form-control,
+        .kb-page .form-select,
         .kb-page .input-group-text {
             border-color: #dce6df;
             min-height: 42px;
         }
 
-        .kb-page .form-control:focus {
+        .kb-page .form-control:focus,
+        .kb-page .form-select:focus {
             border-color: #6caa8a;
             box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.1);
         }
@@ -138,28 +140,41 @@
                     </div>
                 </div>
 
-                {{-- Search Otomatis --}}
+                {{-- Search & Per Page Filter --}}
                 <div class="p-4 border-bottom bg-light-subtle">
                     <form id="kbSearchForm" action="{{ route('knowledge-base.index') }}" method="GET">
-                        <div class="row g-3 align-items-end">
+                        <div class="row g-3 align-items-end justify-content-between">
+                            {{-- Input Cari Referensi --}}
                             <div class="col-12 col-md-6 col-lg-5">
                                 <label for="kbSearchInput" class="form-label small fw-semibold text-dark">
                                     Cari Referensi
                                 </label>
-
                                 <div class="input-group">
                                     <span class="input-group-text bg-white">
                                         <i class="bi bi-search text-secondary"></i>
                                     </span>
-
                                     <input type="text"
                                         id="kbSearchInput"
                                         name="search"
                                         class="form-control"
                                         placeholder="Judul, kategori, atau sumber..."
-                                        value="{{ $search }}"
+                                        value="{{ request('search', $search ?? '') }}"
                                         autocomplete="off">
                                 </div>
+                            </div>
+
+                            {{-- Dropdown Pilih Jumlah Tampilan Data --}}
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <label for="perPageSelect" class="form-label small fw-semibold text-dark">
+                                    Tampilkan Per Halaman
+                                </label>
+                                <select id="perPageSelect" name="per_page" class="form-select" onchange="this.form.submit()">
+                                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10 Data</option>
+                                    <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25 Data</option>
+                                    <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50 Data</option>
+                                    <option value="100" {{ request('per_page') == '100' ? 'selected' : '' }}>100 Data</option>
+                                    <option value="all" {{ request('per_page') == 'all' ? 'selected' : '' }}>Tampilkan Semua</option>
+                                </select>
                             </div>
                         </div>
                     </form>
@@ -285,7 +300,7 @@
                         Halaman <strong>{{ $knowledgeBases->currentPage() }}</strong> dari <strong>{{ $knowledgeBases->lastPage() }}</strong>
                     </div>
                     <div>
-                        {{ $knowledgeBases->links('pagination::bootstrap-5') }}
+                        {{ $knowledgeBases->appends(request()->query())->links('pagination::bootstrap-5') }}
                     </div>
                 </div>
                 @endif

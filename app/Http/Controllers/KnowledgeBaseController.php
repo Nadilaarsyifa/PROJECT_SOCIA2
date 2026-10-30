@@ -17,23 +17,34 @@ class KnowledgeBaseController extends Controller
     public function index(Request $request): View
     {
         $search = trim($request->query('search', ''));
+        $perPage = $request->query('per_page', '10'); // Default 10 data per halaman
 
-        $knowledgeBases = KnowledgeBase::query()
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($subQuery) use ($search) {
+        $query = KnowledgeBase::query()
+            ->when($search !== '', function ($q) use ($search) {
+                $q->where(function ($subQuery) use ($search) {
                     $subQuery->where('title', 'like', "%{$search}%")
                         ->orWhere('content', 'like', "%{$search}%")
                         ->orWhere('category', 'like', "%{$search}%")
                         ->orWhere('source', 'like', "%{$search}%");
                 });
             })
-            ->orderByDesc('updated_at')
-            ->paginate(10)
-            ->withQueryString();
+            ->orderByDesc('updated_at');
+
+        // Logika penanganan Tampilkan Semua vs Pagination Angka
+        if ($perPage === 'all') {
+            $total = $query->count();
+            // Jika data kosong, gunakan default 1 agar paginate tidak eror
+            $knowledgeBases = $query->paginate($total > 0 ? $total : 1)->withQueryString();
+        } else {
+            // Konversi ke integer (validasi angka misal 10, 25, 50, 100)
+            $perPageInt = in_array((int)$perPage, [10, 25, 50, 100]) ? (int)$perPage : 10;
+            $knowledgeBases = $query->paginate($perPageInt)->withQueryString();
+        }
 
         return view('knowledge-base.index', compact(
             'knowledgeBases',
-            'search'
+            'search',
+            'perPage'
         ));
     }
 
