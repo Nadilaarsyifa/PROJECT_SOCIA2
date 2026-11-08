@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\KnowledgeBaseController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -13,9 +14,7 @@ Route::get('/', function () {
 require __DIR__ . '/auth.php';
 
 // Dashboard dapat diakses kedua role
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})
+Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'role.check:Administrator,SOC Engineer'])
     ->name('dashboard');
 
