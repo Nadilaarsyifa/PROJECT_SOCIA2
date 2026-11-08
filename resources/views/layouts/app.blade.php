@@ -50,7 +50,7 @@
             min-height: 100vh;
         }
 
-        /* SIDEBAR DESKTOP */
+        /* SIDEBAR */
 
         .socia-sidebar {
             position: fixed;
@@ -170,12 +170,31 @@
             padding-top: 25px;
         }
 
+        /* PROFIL SIDEBAR */
+
         .socia-user-card {
             display: flex;
             align-items: center;
             gap: 10px;
+            width: 100%;
             padding: 14px 9px;
+            border: 0;
             border-top: 1px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+            color: inherit;
+            text-align: left;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .socia-user-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .socia-user-card:focus-visible {
+            outline: 2px solid #6BC58D;
+            outline-offset: 3px;
         }
 
         .socia-avatar {
@@ -183,19 +202,19 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: #D8F0E1;
             color: var(--sidebar);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
         }
 
         .socia-user-name {
             overflow: hidden;
             color: #FFFFFF;
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 700;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -204,7 +223,7 @@
         .socia-user-role {
             margin-top: 4px;
             color: #B8D2C3;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .socia-logout {
@@ -229,19 +248,17 @@
             font-size: 15px;
         }
 
-        /* TOMBOL TUTUP: HANYA UNTUK MOBILE */
+        /* MOBILE CLOSE BUTTON */
 
         .socia-mobile-close {
             display: none;
         }
 
-        /* OVERLAY MOBILE */
-
         .socia-overlay {
             display: none;
         }
 
-        /* KONTEN UTAMA */
+        /* MAIN CONTENT */
 
         .socia-main {
             min-height: 100vh;
@@ -285,7 +302,7 @@
             border-radius: 13px;
         }
 
-        /* TOMBOL HAMBURGER */
+        /* HAMBURGER */
 
         .socia-menu-toggle {
             display: none;
@@ -307,13 +324,195 @@
         }
 
         .socia-menu-toggle:focus-visible,
-        .socia-mobile-close:focus-visible,
-        .socia-overlay:focus-visible {
+        .socia-mobile-close:focus-visible {
             outline: 3px solid #6BC58D;
             outline-offset: 3px;
         }
 
-        /* RESPONSIVE TABLET DAN HP */
+        /* MODAL PROFIL */
+
+        .socia-profile-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(7, 25, 17, 0.6);
+        }
+
+        .socia-profile-modal.is-open {
+            display: flex;
+        }
+
+        .socia-profile-dialog {
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            max-height: 90dvh;
+            overflow-y: auto;
+            border-radius: 16px;
+            background: #FFFFFF;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .socia-profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .socia-profile-title {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--sidebar);
+        }
+
+        .socia-profile-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 9px;
+            background: #F0F3F1;
+            color: var(--ink);
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .socia-profile-close:hover {
+            background: #E3E9E5;
+        }
+
+        .socia-profile-body {
+            padding: 28px;
+        }
+
+        .socia-profile-identity {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 28px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #F0F7F2;
+        }
+
+        .socia-profile-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #D8F0E1;
+            color: var(--sidebar);
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .socia-profile-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .socia-profile-role {
+            margin-top: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .socia-profile-section-title {
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--sidebar);
+        }
+
+        .socia-profile-field {
+            margin-bottom: 18px;
+        }
+
+        .socia-profile-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .socia-profile-field input {
+            width: 100%;
+            min-height: 46px;
+            padding: 11px 14px;
+            border: 1px solid #D5DFD8;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--ink);
+        }
+
+        .socia-profile-field input[readonly] {
+            background: #F6F8F7;
+            color: #3F5046;
+        }
+
+        .socia-profile-field input::placeholder {
+            color: #8A968E;
+        }
+
+        .socia-profile-field input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(23, 130, 74, 0.12);
+        }
+
+        .socia-profile-submit {
+            width: 100%;
+            min-height: 48px;
+            margin-top: 6px;
+            padding: 12px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #FFFFFF;
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .socia-profile-submit:hover {
+            background: var(--accent-dark);
+        }
+
+        .socia-profile-alert {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .socia-profile-alert.success {
+            background: #E8F6ED;
+            color: #146C37;
+        }
+
+        .socia-profile-alert.error {
+            background: #FCEBEC;
+            color: #A52834;
+        }
+
+        /* RESPONSIVE */
 
         @media (max-width: 800px) {
             .socia-sidebar {
@@ -329,9 +528,7 @@
                 transform: translateX(-105%);
                 visibility: hidden;
                 pointer-events: none;
-                transition:
-                    transform 0.28s ease,
-                    visibility 0.28s ease;
+                transition: transform 0.28s ease, visibility 0.28s ease;
                 box-shadow: 12px 0 35px rgba(0, 0, 0, 0.12);
             }
 
@@ -343,12 +540,6 @@
 
             .socia-brand {
                 padding: 0 5px 26px;
-            }
-
-            .socia-nav {
-                display: flex;
-                flex-direction: column;
-                gap: 6px;
             }
 
             .socia-sidebar-bottom {
@@ -399,9 +590,7 @@
                 opacity: 0;
                 visibility: hidden;
                 pointer-events: none;
-                transition:
-                    opacity 0.28s ease,
-                    visibility 0.28s ease;
+                transition: opacity 0.28s ease, visibility 0.28s ease;
             }
 
             .socia-overlay.is-visible {
@@ -427,6 +616,17 @@
             }
         }
 
+        @media (max-width: 480px) {
+            .socia-profile-header,
+            .socia-profile-body {
+                padding: 20px;
+            }
+
+            .socia-profile-title {
+                font-size: 19px;
+            }
+        }
+
         @media (max-width: 420px) {
             .socia-content {
                 padding: 14px 10px;
@@ -444,7 +644,6 @@
         }
 
         @media (prefers-reduced-motion: reduce) {
-
             .socia-sidebar,
             .socia-overlay {
                 transition: none;
@@ -455,17 +654,22 @@
 
 <body>
     @php
-    $currentUser = auth()->user();
+        $currentUser = auth()->user();
 
-    $currentRole = $currentUser?->getRoleNames()->first()
-    ?? $currentUser?->role
-    ?? 'Pengguna';
+        $currentRole = $currentUser?->getRoleNames()->first()
+            ?? $currentUser?->role
+            ?? 'Pengguna';
 
-    $currentName = $currentUser?->nama
-    ?? $currentUser?->username
-    ?? 'Pengguna';
+        $currentName = $currentUser?->nama
+            ?? $currentUser?->username
+            ?? 'Pengguna';
 
-    $initials = strtoupper(substr($currentName, 0, 2));
+        $initials = strtoupper(substr($currentName, 0, 2));
+
+        $shouldOpenProfileModal =
+            $errors->has('current_password')
+            || $errors->has('password')
+            || session('password-status');
     @endphp
 
     <div class="socia-layout">
@@ -474,13 +678,15 @@
         <div
             class="socia-overlay"
             id="sociaOverlay"
-            aria-hidden="true"></div>
+            aria-hidden="true">
+        </div>
 
         <!-- SIDEBAR -->
         <aside
             class="socia-sidebar"
             id="sociaSidebar"
             aria-label="Menu navigasi utama">
+
             <div style="display: flex; align-items: center;">
                 <a href="{{ route('dashboard') }}" class="socia-brand">
                     <div class="socia-brand-logo">
@@ -512,8 +718,7 @@
                 <a
                     href="{{ route('dashboard') }}"
                     class="socia-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}"
-                    @if(request()->routeIs('dashboard')) aria-current="page" @endif
-                    >
+                    @if(request()->routeIs('dashboard')) aria-current="page" @endif>
                     <span class="socia-nav-icon">
                         <i class="bi bi-grid-1x2"></i>
                     </span>
@@ -523,15 +728,15 @@
                 <a
                     href="{{ route('tickets.create') }}"
                     class="socia-nav-link {{ request()->routeIs('tickets.create') ? 'active' : '' }}"
-                    @if(request()->routeIs('tickets.*')) aria-current="page" @endif
-                    >
+                    @if(request()->routeIs('tickets.*')) aria-current="page" @endif>
                     <span class="socia-nav-icon">
                         <i class="bi bi-search"></i>
                     </span>
                     Analyze Ticket
                 </a>
 
-                <a href="{{ route('tickets.index') }}"
+                <a
+                    href="{{ route('tickets.index') }}"
                     class="socia-nav-link {{ request()->routeIs('tickets.index') ? 'active' : '' }}">
                     <span class="socia-nav-icon">
                         <i class="bi bi-ticket-detailed"></i>
@@ -541,24 +746,24 @@
 
                 @if ($currentUser && $currentUser->hasRole('Administrator'))
 
-                <a
-                    href="{{ route('admin.users.index') }}"
-                    class="socia-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
-                    @if(request()->routeIs('admin.users.*')) aria-current="page" @endif
-                    >
-                    <span class="socia-nav-icon">
-                        <i class="bi bi-people"></i>
-                    </span>
-                    User Management
-                </a>
-                
-                <a href="{{ route('knowledge-base.index') }}"
-                    class="socia-nav-link {{ request()->routeIs('knowledge-base.*') ? 'active' : '' }}">
-                    <span class="socia-nav-icon">
-                        <i class="bi bi-journal-text"></i>
-                    </span>
-                    Knowledge Base
-                </a>
+                    <a
+                        href="{{ route('admin.users.index') }}"
+                        class="socia-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
+                        @if(request()->routeIs('admin.users.*')) aria-current="page" @endif>
+                        <span class="socia-nav-icon">
+                            <i class="bi bi-people"></i>
+                        </span>
+                        User Management
+                    </a>
+
+                    <a
+                        href="{{ route('knowledge-base.index') }}"
+                        class="socia-nav-link {{ request()->routeIs('knowledge-base.*') ? 'active' : '' }}">
+                        <span class="socia-nav-icon">
+                            <i class="bi bi-journal-text"></i>
+                        </span>
+                        Knowledge Base
+                    </a>
 
                 @endif
 
@@ -566,15 +771,24 @@
 
             <div class="socia-sidebar-bottom">
 
-                <div class="socia-user-card">
+                <!-- TOMBOL PROFIL -->
+                <button
+                    type="button"
+                    class="socia-user-card"
+                    id="openProfileModal"
+                    aria-label="Buka profil pengguna">
+
                     <div class="socia-avatar">{{ $initials }}</div>
 
                     <div style="min-width: 0;">
                         <div class="socia-user-name">{{ $currentName }}</div>
                         <div class="socia-user-role">{{ $currentRole }}</div>
                     </div>
-                </div>
 
+                    <i class="bi bi-chevron-right ms-auto"></i>
+                </button>
+
+                <!-- LOGOUT -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
@@ -604,12 +818,12 @@
 
                 <div class="socia-topbar-heading">
                     @isset($header)
-                    {{ $header }}
+                        {{ $header }}
                     @else
-                    <div class="socia-page-heading">PGE-SOCIA</div>
-                    <div class="socia-page-subtitle">
-                        Security Operations Center Intelligence Assistant
-                    </div>
+                        <div class="socia-page-heading">PGE-SOCIA</div>
+                        <div class="socia-page-subtitle">
+                            Security Operations Center Intelligence Assistant
+                        </div>
                     @endisset
                 </div>
 
@@ -622,6 +836,170 @@
         </div>
     </div>
 
+    <!-- MODAL PROFIL PENGGUNA -->
+    <div
+        class="socia-profile-modal"
+        id="profileModal"
+        data-auto-open="{{ $shouldOpenProfileModal ? 'true' : 'false' }}"
+        aria-hidden="true">
+
+        <div
+            class="socia-profile-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="profileModalTitle">
+
+            <div class="socia-profile-header">
+                <div class="socia-profile-title" id="profileModalTitle">
+                    Profil Pengguna
+                </div>
+
+                <button
+                    type="button"
+                    class="socia-profile-close"
+                    id="closeProfileModal"
+                    aria-label="Tutup modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="socia-profile-body">
+
+                <!-- INFORMASI PENGGUNA -->
+                <div class="socia-profile-identity">
+                    <div class="socia-profile-avatar">
+                        {{ $initials }}
+                    </div>
+
+                    <div>
+                        <div class="socia-profile-name">
+                            {{ $currentName }}
+                        </div>
+
+                        <div class="socia-profile-role">
+                            {{ $currentRole }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="socia-profile-section-title">
+                    Informasi Akun
+                </div>
+
+                <div class="socia-profile-field">
+                    <label for="profile_name">Nama Pengguna</label>
+                    <input
+                        type="text"
+                        id="profile_name"
+                        value="{{ $currentUser?->nama ?? '-' }}"
+                        readonly>
+                </div>
+
+                <div class="socia-profile-field">
+                    <label for="profile_username">Username</label>
+                    <input
+                        type="text"
+                        id="profile_username"
+                        value="{{ $currentUser?->username ?? '-' }}"
+                        readonly>
+                </div>
+
+                <div class="socia-profile-field">
+                    <label for="profile_role">Role</label>
+                    <input
+                        type="text"
+                        id="profile_role"
+                        value="{{ $currentRole }}"
+                        readonly>
+                </div>
+
+                <hr style="border-color: var(--line); margin: 24px 0;">
+
+                <!-- FORM GANTI PASSWORD -->
+                <div class="socia-profile-section-title">
+                    Ganti Password
+                </div>
+
+                @if (session('password-status'))
+                    <div class="socia-profile-alert success">
+                        <i class="bi bi-check-circle"></i>
+                        {{ session('password-status') }}
+                    </div>
+                @endif
+
+                @if ($errors->has('current_password') || $errors->has('password'))
+                    <div class="socia-profile-alert error">
+                        <strong>Password gagal diperbarui:</strong>
+                        <ul class="mb-0 mt-2 ps-3">
+                            @foreach ($errors->get('current_password') as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+
+                            @foreach ($errors->get('password') as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form
+                    method="POST"
+                    action="{{ route('profile.password.update') }}">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="socia-profile-field">
+                        <label for="current_password">
+                            Password Saat Ini
+                        </label>
+
+                        <input
+                            type="password"
+                            id="current_password"
+                            name="current_password"
+                            autocomplete="current-password"
+                            placeholder="Masukkan password saat ini"
+                            required>
+                    </div>
+
+                    <div class="socia-profile-field">
+                        <label for="password">
+                            Password Baru
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            autocomplete="new-password"
+                            placeholder="Minimal 8 karakter"
+                            required>
+                    </div>
+
+                    <div class="socia-profile-field">
+                        <label for="password_confirmation">
+                            Konfirmasi Password Baru
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            autocomplete="new-password"
+                            placeholder="Ulangi password baru"
+                            required>
+                    </div>
+
+                    <button type="submit" class="socia-profile-submit">
+                        Simpan Password Baru
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DRAWER MOBILE -->
     <script>
         (() => {
             const sidebar = document.getElementById('sociaSidebar');
@@ -674,9 +1052,77 @@
                     });
                 });
 
-            mobileQuery.addEventListener('change', () => {
-                closeMenu();
+            mobileQuery.addEventListener('change', closeMenu);
+        })();
+    </script>
+
+    <!-- SCRIPT MODAL PROFIL -->
+    <script>
+        (() => {
+            const modal = document.getElementById('profileModal');
+            const openButton = document.getElementById('openProfileModal');
+            const closeButton = document.getElementById('closeProfileModal');
+            const sidebar = document.getElementById('sociaSidebar');
+            const overlay = document.getElementById('sociaOverlay');
+            const menuButton = document.getElementById('sociaOpenMenu');
+
+            if (!modal || !openButton || !closeButton) return;
+
+            function openModal() {
+                // Tutup drawer mobile jika sedang terbuka
+                if (sidebar && overlay) {
+                    sidebar.classList.remove('is-open');
+                    overlay.classList.remove('is-visible');
+                    document.body.classList.remove('sidebar-open');
+
+                    if (menuButton) {
+                        menuButton.setAttribute('aria-expanded', 'false');
+                    }
+
+                    overlay.setAttribute('aria-hidden', 'true');
+                }
+
+                modal.classList.add('is-open');
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+
+                const passwordInput = document.getElementById('current_password');
+
+                if (passwordInput) {
+                    passwordInput.focus();
+                }
+            }
+
+            function closeModal() {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+
+                openButton.focus();
+            }
+
+            openButton.addEventListener('click', openModal);
+            closeButton.addEventListener('click', closeModal);
+
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
             });
+
+            document.addEventListener('keydown', (event) => {
+                if (
+                    event.key === 'Escape' &&
+                    modal.classList.contains('is-open')
+                ) {
+                    closeModal();
+                }
+            });
+
+            // Buka kembali modal setelah validasi gagal atau password berhasil diperbarui
+            if (modal.dataset.autoOpen === 'true') {
+                openModal();
+            }
         })();
     </script>
 </body>
