@@ -191,7 +191,7 @@
 
 <footer class="text-center pb-3">
     <small class="login-footer">
-        PT Pema Global Energi &mdash; Security Operations Center
+        PT Pema Global Energi - Security Operations Center
     </small>
 </footer>
 

@@ -23,6 +23,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 // Kelola User, Delete Ticket, dan Kelola Knowledge Base hanya dapat diakses Administrator
 Route::middleware(['auth', 'role.check:Administrator'])->group(function () {
     // Daftar user
+
     Route::get('/admin/users', [UserManagementController::class, 'index'])
         ->name('admin.users.index');
 
@@ -37,6 +38,16 @@ Route::middleware(['auth', 'role.check:Administrator'])->group(function () {
         UserManagementController::class,
         'destroy',
     ])->name('users.destroy');
+
+
+    // Daftar user
+    Route::get('/admin/users', [UserManagementController::class, 'index'])
+        ->name('admin.users.index');
+
+    // Tambah user
+    Route::post('/admin/users', [UserManagementController::class, 'store'])
+        ->name('admin.users.store');
+
 
     // Hapus ticket
     Route::delete('/tickets/{ticketNo}', [TicketController::class, 'destroy'])
@@ -76,7 +87,7 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
 
     Route::patch('/profile', [ProfileController::class, 'update'])
         ->name('profile.update');
-        
+
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
         ->name('profile.password.update');
 

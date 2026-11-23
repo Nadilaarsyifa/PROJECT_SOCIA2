@@ -26,7 +26,6 @@
             color: #0F3B2C;
         }
 
-        /* Desain Tabel Bergaris (Bordered Style) */
         .users-page .custom-table {
             border-color: #e2e8f0 !important;
         }
@@ -92,10 +91,45 @@
             border-radius: 16px;
             font-size: 1.7rem;
         }
+
+        .users-page .form-label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+
+        .users-page .form-control,
+        .users-page .form-select {
+            padding: 10px 12px;
+            border-color: #dce6df;
+            border-radius: 8px;
+        }
+
+        .users-page .form-control:focus,
+        .users-page .form-select:focus {
+            border-color: #176b45;
+            box-shadow: 0 0 0 0.2rem rgba(23, 107, 69, 0.12);
+        }
+
+        .users-page .btn-add-user {
+            background: #176b45;
+            border-color: #176b45;
+            color: white;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 9px 15px;
+        }
+
+        .users-page .btn-add-user:hover {
+            background: #0f5637;
+            border-color: #0f5637;
+            color: white;
+        }
     </style>
 
     <div class="users-page">
-        {{-- Notifikasi --}}
+
+        {{-- Notifikasi sukses --}}
         @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
             <i class="bi bi-check-circle me-2"></i>
@@ -104,6 +138,7 @@
         </div>
         @endif
 
+        {{-- Notifikasi error --}}
         @if (session('error'))
         <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
             <i class="bi bi-exclamation-triangle me-2"></i>
@@ -123,7 +158,7 @@
 
                     <p class="small mb-2">
                         Password sementara untuk
-                        <strong>{{ session('temporary_username', session('username', 'pengguna')) }}</strong>:
+                        <strong>{{ session('temporary_username', 'pengguna') }}</strong>:
                     </p>
 
                     <div class="d-flex flex-wrap align-items-center gap-2">
@@ -147,7 +182,8 @@
 
         <div class="card user-card bg-white">
             <div class="card-body p-0">
-                {{-- Header Card & Judul --}}
+
+                {{-- Header Card --}}
                 <div class="p-4 border-bottom">
                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
                         <div>
@@ -155,9 +191,19 @@
                                 Daftar Pengguna SOCIA
                             </h5>
                             <p class="text-secondary small mb-0">
-                                Total pengguna terdaftar: <strong>{{ $users->count() }}</strong>
+                                Total pengguna terdaftar:
+                                <strong>{{ $users->count() }}</strong>
                             </p>
                         </div>
+
+                        {{-- Tombol Tambah User --}}
+                        <button type="button"
+                            class="btn btn-add-user d-inline-flex align-items-center gap-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addUserModal">
+                            <i class="bi bi-plus-lg"></i>
+                            Tambah User
+                        </button>
                     </div>
                 </div>
 
@@ -197,6 +243,7 @@
                                     @php
                                     $roles = $user->getRoleNames();
                                     @endphp
+
                                     @if ($roles->isNotEmpty())
                                     @foreach ($roles as $role)
                                     @php
@@ -206,6 +253,7 @@
                                     default => '',
                                     };
                                     @endphp
+
                                     <span class="role-badge {{ $roleClass }} me-1">
                                         {{ $role }}
                                     </span>
@@ -217,12 +265,14 @@
 
                                 <td class="text-center text-nowrap">
                                     <div class="d-inline-flex gap-2">
-                                        <!-- Tombol Reset Password -->
+
+                                        {{-- Tombol Reset Password --}}
                                         <form action="{{ route('users.reset-password', $user->getKey()) }}"
                                             method="POST"
                                             class="d-inline"
                                             onsubmit="return confirm('Reset password pengguna ini?')">
                                             @csrf
+
                                             <button type="submit"
                                                 class="btn btn-info text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
                                                 style="min-width: 65px; line-height: 1.2; font-size: 0.75rem; background-color: #00c4cc; border: none;">
@@ -231,7 +281,7 @@
                                             </button>
                                         </form>
 
-                                        <!-- Tombol Hapus -->
+                                        {{-- Tombol Hapus --}}
                                         @if (!auth()->user()->is($user))
                                         <form action="{{ route('users.destroy', $user->getKey()) }}"
                                             method="POST"
@@ -239,6 +289,7 @@
                                             onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
                                             @csrf
                                             @method('DELETE')
+
                                             <button type="submit"
                                                 class="btn btn-danger text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
                                                 style="min-width: 65px; line-height: 1.2; font-size: 0.75rem;">
@@ -247,6 +298,7 @@
                                             </button>
                                         </form>
                                         @endif
+
                                     </div>
                                 </td>
                             </tr>
@@ -271,4 +323,159 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Tambah User --}}
+    <div class="modal fade" id="addUserModal" tabindex="-1"
+        aria-labelledby="addUserModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow rounded-4">
+
+                <div class="modal-header px-4 py-3">
+                    <div>
+                        <h5 class="modal-title fw-bold" id="addUserModalLabel"
+                            style="color: #0F3B2C;">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Tambah Pengguna
+                        </h5>
+                        <p class="text-secondary small mb-0 mt-1">
+                            Masukkan informasi akun pengguna baru.
+                        </p>
+                    </div>
+
+                    <button type="button" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+
+                <form action="{{ route('admin.users.store') }}" method="POST">
+                    @csrf
+
+                    <div class="modal-body px-4 py-3">
+
+                        {{-- Nama --}}
+                        <div class="mb-3">
+                            <label for="nama" class="form-label">
+                                Nama Lengkap
+                            </label>
+
+                            <input type="text"
+                                class="form-control @error('nama') is-invalid @enderror"
+                                id="nama"
+                                name="nama"
+                                value="{{ old('nama') }}"
+                                placeholder="Masukkan nama lengkap"
+                                autocomplete="off"
+                                required>
+
+                            @error('nama')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Username --}}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                Username
+                            </label>
+
+                            <input type="text"
+                                class="form-control @error('username') is-invalid @enderror"
+                                id="new_username"
+                                name="username"
+                                value="{{ old('username') }}"
+                                placeholder="Masukkan username"
+                                autocomplete="off"
+                                required>
+
+                            @error('username')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Password --}}
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                Password
+                            </label>
+
+                            <input type="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                id="new_password"
+                                name="password"
+                                placeholder="Minimal 8 karakter"
+                                autocomplete="new-password"
+                                required>
+
+                            @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        {{-- Konfirmasi Password --}}
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">
+                                Konfirmasi Password
+                            </label>
+
+                            <input type="password"
+                                class="form-control"
+                                id="new_password_confirmation"
+                                name="password_confirmation"
+                                placeholder="Ulangi password"
+                                autocomplete="new-password"
+                                required>
+                        </div>
+
+                        {{-- Role Pengguna --}}
+                        <div class="mb-2">
+                            <label class="form-label">
+                                Role Pengguna
+                            </label>
+
+                            <div class="form-control d-flex align-items-center bg-light">
+                                <span class="role-badge role-engineer">
+                                    SOC Engineer
+                                </span>
+                            </div>
+
+                            <small class="text-secondary">
+                                Pengguna baru secara otomatis diberikan role SOC Engineer.
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer px-4 py-3">
+                        <button type="button"
+                            class="btn btn-light border rounded-3"
+                            data-bs-dismiss="modal">
+                            Batal
+                        </button>
+
+                        <button type="submit"
+                            class="btn btn-add-user">
+                            <i class="bi bi-check-lg me-1"></i>
+                            Simpan Pengguna
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {{-- Buka kembali modal jika validasi gagal --}}
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalElement = document.getElementById('addUserModal');
+
+            if (modalElement && window.bootstrap) {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+            }
+        });
+    </script>
+    @endif
+
 </x-app-layout>

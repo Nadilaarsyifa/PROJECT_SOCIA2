@@ -18,6 +18,41 @@ class UserManagementController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'nama' => ['required', 'string', 'max:255'],
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                'alpha_dash',
+                'unique:users,username',
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'nama.required' => 'Nama lengkap wajib diisi.',
+            'username.required' => 'Username wajib diisi.',
+            'username.alpha_dash' => 'Username hanya boleh berisi huruf, angka, tanda strip, dan garis bawah.',
+            'username.unique' => 'Username sudah digunakan oleh pengguna lain.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        $user = User::create([
+            'nama' => $validated['nama'],
+            'username' => $validated['username'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        // Semua pengguna baru otomatis mendapatkan role SOC Engineer.
+        $user->assignRole('SOC Engineer');
+
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'Pengguna SOC Engineer berhasil ditambahkan.');
+    }
 
     public function resetPassword(User $user): RedirectResponse
     {
