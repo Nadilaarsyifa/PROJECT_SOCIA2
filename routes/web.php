@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\KnowledgeBaseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ActionChecklistController;
+
+
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -109,7 +112,7 @@ Route::middleware(['auth', 'role.check:Administrator,SOC Engineer'])->group(func
         ->name('tickets.export');
 
     Route::patch('/tickets/{ticketNo}/checklist', [
-        \App\Http\Controllers\ActionChecklistController::class,
+        ActionChecklistController::class,
         'update',
     ])->name('action-checklists.update');
 

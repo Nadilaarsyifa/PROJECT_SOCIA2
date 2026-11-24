@@ -28,6 +28,7 @@ class Ticket extends Model
         'raw_message',
         'inserted_at',
         'id_user',
+        'handled_by',
     ];
 
     protected function casts(): array
@@ -46,5 +47,10 @@ class Ticket extends Model
     public function aiAnalysis(): HasOne
     {
         return $this->hasOne(AIAnalysis::class, 'no_ticket', 'no_ticket');
+    }
+
+    public function handler(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'handled_by', 'id_user');
     }
 }

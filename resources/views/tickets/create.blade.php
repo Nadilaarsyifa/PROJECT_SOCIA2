@@ -253,6 +253,14 @@
 
                     {{-- Langkah Penanganan --}}
                     <section class="analysis-card result-card">
+                    @php
+                        $currentUserId = auth()->user()->id_user;
+
+                        $canEditChecklist = $ticket && (
+                            $ticket->handled_by === null ||
+                            (int) $ticket->handled_by === (int) $currentUserId
+                        );
+                    @endphp
                         <div class="card-body p-4">
                             <div class="result-head d-flex align-items-center gap-3 mb-3">
                                 <div class="section-icon">
@@ -267,7 +275,7 @@
                             </div>
                             @endif
 
-                            @if ($analysis &&$analysis->actionChecklists->isNotEmpty())
+                            @if ($analysis && $analysis->actionChecklists->isNotEmpty())
                             <p class="text-secondary small mt-3 mb-0">
                                 Tandai tindakan yang telah dilakukan. Catatan dapat diisi jika diperlukan, lalu simpan seluruh progres sekaligus.
                             </p>
@@ -280,7 +288,7 @@
                                 @method('PATCH')
 
                                 <div class="d-flex flex-column gap-3 mt-3">
-                                    @foreach ($analysis->actionChecklists as $index =>$action)
+                                    @foreach ($analysis->actionChecklists as $index => $action)
                                     <div class="border rounded-3 p-3" style="border-color: #E1E8E3 !important;">
                                         <div class="d-flex align-items-start gap-3">
                                             <div class="pt-1">
@@ -301,7 +309,8 @@
                                                     name="actions[{{ $index }}][status]"
                                                     value="Completed"
                                                     id="action_{{ $action->id_action }}"
-                                                    {{ $action->status === 'Completed' ? 'checked' : '' }}>
+                                                    {{ $action->status === 'Completed' ? 'checked' : '' }}
+                                                    {{ !$canEditChecklist ? 'disabled' : '' }}>
                                             </div>
 
                                             <div class="flex-grow-1">
@@ -320,7 +329,11 @@
                                                         aria-expanded="{{ $action->notes ? 'true' : 'false' }}"
                                                         aria-controls="note_{{ $action->id_action }}">
                                                         <i class="bi bi-pencil-square me-1"></i>
-                                                        {{ $action->notes ? 'Edit Note' : 'Beri Note' }}
+                                                        @if (!$canEditChecklist)
+                                                            Lihat Catatan
+                                                        @else
+                                                            {{ $action->notes ? 'Edit Note' : 'Beri Note' }}
+                                                        @endif
                                                     </button>
                                                 </div>
 
@@ -339,7 +352,8 @@
                                                         id="notes_{{ $action->id_action }}"
                                                         rows="3"
                                                         maxlength="5000"
-                                                        placeholder="Tambahkan catatan jika diperlukan...">{{ $action->notes }}</textarea>
+                                                        placeholder="Tambahkan catatan jika diperlukan..."
+                                                        {{ !$canEditChecklist ? 'readonly' : '' }}>{{ $action->notes }}</textarea>
                                                 </div>
                                             </div>
 
@@ -356,9 +370,11 @@
                                         0 dari {{ $analysis->actionChecklists->count() }} tindakan selesai
                                     </small>
 
+                                    @if ($canEditChecklist)
                                     <button type="submit" class="btn btn-soc">
                                         Simpan Progres
                                     </button>
+                                    @endif
                                 </div>
                             </form>
                             @elseif (!$analysis)

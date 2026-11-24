@@ -52,13 +52,44 @@ class DashboardController extends Controller
             ->orderByDesc('total')
             ->get();
 
+        // Data tiket untuk tabel pemantauan penanganan
+        $handlingTickets = (clone $tickets)
+            ->with([
+                'aiAnalysis.actionChecklists',
+                'handler',
+            ])
+            ->orderByDesc('event_time')
+            ->get();
+
+        // Menghitung status penanganan setiap tiket
+        foreach ($handlingTickets as $ticket) {
+            $checklists = $ticket->aiAnalysis?->actionChecklists ?? collect();
+
+            $totalActions = $checklists->count();
+
+            $completedActions = $checklists
+                ->where('status', 'Completed')
+                ->count();
+
+            if ($totalActions === 0 || $completedActions === 0) {
+                $handlingStatus = 'Belum Ditangani';
+            } elseif ($completedActions < $totalActions) {
+                $handlingStatus = 'Sedang Ditangani';
+            } else {
+                $handlingStatus = 'Selesai';
+            }
+
+            $ticket->setAttribute('handling_status', $handlingStatus);
+        }
+
         return view('dashboard', compact(
             'period',
             'selectedMonth',
             'selectedDate',
             'totalTickets',
             'detectionStats',
-            'riskStats'
+            'riskStats',
+            'handlingTickets'
         ));
     }
 }

@@ -28,6 +28,16 @@
         };
     };
 
+    $riskBadgeClass = function ($label) {
+        return match (strtolower(trim($label ?? ''))) {
+            'high', 'critical' => 'risk-high',
+            'medium' => 'risk-medium',
+            'low' => 'risk-low',
+            'informational', 'info' => 'risk-info',
+            default => 'risk-default',
+        };
+    };
+
     $detectionTotal = $detectionStats->sum('total');
     $riskTotal = $riskStats->sum('total');
     @endphp
@@ -81,6 +91,11 @@
             font-weight: 700;
             font-size: 2rem;
             line-height: 1.15;
+        }
+
+        .dashboard-page .table-ticket-number {
+            color: #0F3B2C;
+            font-weight: 700;
         }
 
         /* Badge jumlah */
@@ -219,6 +234,95 @@
             font-size: 1.7rem;
         }
 
+        /* Tabel pemantauan penanganan tiket (disamakan dengan All Tickets) */
+        .dashboard-page .custom-table {
+            border-color: #e2e8f0 !important;
+        }
+
+        .dashboard-page .custom-table thead th {
+            background-color: #f8fafc;
+            color: #334155;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 14px;
+            border-bottom: 2px solid #cbd5e1 !important;
+        }
+
+        .dashboard-page .custom-table tbody td {
+            padding: 14px;
+            border-color: #e2e8f0;
+        }
+
+        .dashboard-page .custom-table tbody tr:hover {
+            background-color: #f1f5f9;
+        }
+
+        .dashboard-page .risk-badge,
+        .dashboard-page .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .dashboard-page .risk-high {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .dashboard-page .risk-medium {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .dashboard-page .risk-low {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .dashboard-page .risk-info {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+        .dashboard-page .risk-default {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dashboard-page .status-pending {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dashboard-page .status-ongoing {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .dashboard-page .status-completed {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+        .dashboard-page .handling-status {
+            cursor: help;
+        }
+
         @media (max-width: 767.98px) {
             .dashboard-page .ticket-number {
                 font-size: 1.6rem;
@@ -239,7 +343,7 @@
 
         {{-- FILTER PERIODE --}}
         <div class="card dash-card mb-4">
-            <div class="p-4 border-bottom bg-light-subtle">
+            <div class="p-4 bg-light-subtle">
                 <form action="{{ route('dashboard') }}" method="GET" id="dashboardFilter">
                     <div class="row g-3 align-items-end">
                         <div class="col-12 col-md-4 col-lg-3">
@@ -419,6 +523,128 @@
             </div>
 
         </div>
+
+        {{-- TABEL PEMANTAUAN PENANGANAN TIKET --}}
+        <div class="card dash-card mt-4">
+            <div class="p-4 border-bottom">
+                <div>
+                    <h5 class="page-title fw-bold mb-1">
+                        Pemantauan Penanganan Tiket
+                    </h5>
+                    <p class="text-secondary small mb-0">
+                        Progres penanganan tiket berdasarkan periode yang dipilih.
+                    </p>
+                </div>
+            </div>
+
+            @if ($handlingTickets->isNotEmpty())
+                <div class="table-responsive p-4">
+                    <table class="table table-bordered custom-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">No.</th>
+                                <th class="text-center" style="width: 140px;">Ticket No.</th>
+                                <th>Detection</th>
+                                <th class="text-center" style="width: 120px;">Risk Level</th>
+                                <th class="text-center" style="width: 150px;">Event Time</th>
+                                <th class="text-center" style="width: 180px;">Status Penanganan</th>
+                                <th class="text-center" style="width: 110px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($handlingTickets as $index => $ticket)
+                                @php
+                                    $statusClass = match ($ticket->handling_status) {
+                                        'Belum Ditangani' => 'status-pending',
+                                        'Sedang Ditangani' => 'status-ongoing',
+                                        'Selesai' => 'status-completed',
+                                        default => 'status-pending',
+                                    };
+
+                                    $handlerName = $ticket->handler?->nama;
+                                @endphp
+
+                                <tr>
+                                    <td class="text-center fw-semibold text-secondary">
+                                        {{ $index + 1 }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="table-ticket-number">
+                                            {{ $ticket->no_ticket }}
+                                        </span>
+                                        @if (!empty($ticket->offense_id))
+                                            <div class="text-muted small">
+                                                Offense: {{ $ticket->offense_id }}
+                                            </div>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        <span class="fw-semibold text-dark">
+                                            {{ $ticket->detection ?: '—' }}
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span class="risk-badge {{ $riskBadgeClass($ticket->risk_level) }}">
+                                            {{ $ticket->risk_level ?: 'Unknown' }}
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center text-nowrap">
+                                        @if ($ticket->event_time)
+                                            <div class="fw-semibold text-dark">
+                                                {{ \Carbon\Carbon::parse($ticket->event_time)->format('d M Y') }}
+                                            </div>
+                                            <div class="text-muted small">
+                                                {{ \Carbon\Carbon::parse($ticket->event_time)->format('H:i:s') }}
+                                            </div>
+                                        @else
+                                            <span class="text-secondary">—</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="text-center">
+                                        <span
+                                            class="status-badge handling-status {{ $statusClass }}"
+                                            @if ($ticket->handling_status === 'Sedang Ditangani' && $handlerName)
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                title="Ditangani oleh: {{ $handlerName }}"
+                                            @endif
+                                        >
+                                            {{ $ticket->handling_status }}
+                                        </span>
+                                    </td>
+
+                                    <td class="text-center text-nowrap">
+                                        <a href="{{ route('tickets.create', ['ticket' => $ticket->no_ticket]) }}"
+                                            class="btn btn-info text-white fw-medium d-inline-flex flex-column align-items-center justify-content-center p-2 rounded-3"
+                                            style="min-width: 65px; line-height: 1.2; font-size: 0.75rem; background-color: #00c4cc; border: none;"
+                                            title="Lihat detail ticket">
+                                            <i class="bi bi-eye-fill mb-1" style="font-size: 1.1rem;"></i>
+                                            <span>Detail</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="bi bi-ticket-perforated"></i>
+                    </div>
+                    <h6 class="fw-bold mt-3 mb-2">Belum ada tiket</h6>
+                    <p class="text-secondary small mb-0">
+                        Tidak ada tiket pada periode yang dipilih.
+                    </p>
+                </div>
+            @endif
+        </div>
+
     </div>
 
     {{-- CHART.JS --}}
@@ -453,6 +679,13 @@
             });
 
             updatePeriodFields();
+
+            // Tooltip nama SOC Engineer pemegang tiket
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                    new bootstrap.Tooltip(el);
+                });
+            }
 
             // Warna dan lebar elemen dinamis
             document.querySelectorAll('[data-color]').forEach(el => {
