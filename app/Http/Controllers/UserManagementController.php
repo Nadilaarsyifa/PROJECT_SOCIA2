@@ -19,6 +19,7 @@ class UserManagementController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
+
     {
         $validated = $request->validate([
             'nama' => ['required', 'string', 'max:255'],
@@ -26,27 +27,26 @@ class UserManagementController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'alpha_dash',
+                'regex:/^[A-Za-z0-9._-]+$/',
                 'unique:users,username',
             ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [
             'nama.required' => 'Nama lengkap wajib diisi.',
             'username.required' => 'Username wajib diisi.',
-            'username.alpha_dash' => 'Username hanya boleh berisi huruf, angka, tanda strip, dan garis bawah.',
+            'username.regex' => 'Username hanya boleh berisi huruf, angka, titik, tanda strip, dan garis bawah.',
             'username.unique' => 'Username sudah digunakan oleh pengguna lain.',
             'password.required' => 'Password wajib diisi.',
             'password.min' => 'Password minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ]);
-
         $user = User::create([
             'nama' => $validated['nama'],
             'username' => $validated['username'],
             'password' => Hash::make($validated['password']),
+            'role' => 'SOC Engineer',
         ]);
 
-        // Semua pengguna baru otomatis mendapatkan role SOC Engineer.
         $user->assignRole('SOC Engineer');
 
         return redirect()
