@@ -22,7 +22,7 @@ use App\Services\KnowledgeBaseRetriever;
 class TicketController extends Controller
 {
     /** Hanya satu kali pemanggilan Ollama; jika hasil tidak lolos validasi, gunakan fallback. */
-    private const MAX_AI_ATTEMPTS = 2;
+    private const MAX_AI_ATTEMPTS = 1;
 
     public function reset(Request $request): RedirectResponse
     {
@@ -569,7 +569,11 @@ PROMPT;
 
     public function index(Request $request): View
     {
-        $query = Ticket::with('user');
+        $query = Ticket::with([
+            'user',
+            'aiAnalysis.actionChecklists',
+            'handler',
+        ]);
 
         // Pencarian berdasarkan nomor tiket atau detection.
         if ($request->filled('search')) {

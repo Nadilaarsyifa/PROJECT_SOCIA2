@@ -109,30 +109,22 @@
             border: 1px solid #e2e8f0;
         }
 
-        .tickets-page .status-open,
-        .tickets-page .status-investigation {
-            background: #fefce8;
-            color: #ca8a04;
-            border: 1px solid #fef08a;
-        }
-
-        .tickets-page .status-confirmed {
-            background: #fef2f2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-        }
-
-        .tickets-page .status-false-positive,
-        .tickets-page .status-closed {
-            background: #f0fdf4;
-            color: #16a34a;
-            border: 1px solid #bbf7d0;
-        }
-
-        .tickets-page .status-default {
+        .tickets-page .status-pending {
             background: #f8fafc;
             color: #64748b;
             border: 1px solid #e2e8f0;
+        }
+
+        .tickets-page .status-ongoing {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .tickets-page .status-completed {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
         }
 
         .tickets-page .btn-action-view {
@@ -162,6 +154,20 @@
             color: #176b45;
             border-radius: 16px;
             font-size: 1.7rem;
+        }
+
+        /* Perbaikan Pagination agar ikon panah tidak raksasa dan tidak bertumpuk */
+        .tickets-page .pagination-wrapper svg {
+            width: 14px !important;
+            height: 14px !important;
+            max-width: 14px !important;
+            max-height: 14px !important;
+            display: inline-block !important;
+        }
+
+        .tickets-page .pagination-wrapper nav > div:first-child,
+        .tickets-page .pagination-wrapper nav > div:last-child > div:first-child {
+            display: none !important;
         }
     </style>
 
@@ -381,14 +387,26 @@
                             default => 'risk-default',
                             };
 
-                            $status = strtolower(trim($ticket->status ?? ''));
-                            $statusClass = match ($status) {
-                            'open', 'needs investigation' => 'status-open',
-                            'confirmed', 'valid incident' => 'status-confirmed',
-                            'false positive' => 'status-false-positive',
-                            'closed', 'resolved' => 'status-closed',
-                            default => 'status-default',
-                            };
+                            $checklists = $ticket->aiAnalysis?->actionChecklists ?? collect();
+
+                            $totalActions = $checklists->count();
+
+                            $completedActions = $checklists
+                                ->where('status', 'Completed')
+                                ->count();
+
+                            if ($totalActions === 0 || $completedActions === 0) {
+                                $handlingStatus = 'Belum Ditangani';
+                                $statusClass = 'status-pending';
+                            } elseif ($completedActions < $totalActions) {
+                                $handlingStatus = 'Sedang Ditangani';
+                                $statusClass = 'status-ongoing';
+                            } else {
+                                $handlingStatus = 'Selesai';
+                                $statusClass = 'status-completed';
+                            }
+
+                            $handlerName = $ticket->handler?->nama;
                             @endphp
 
                             <tr>
@@ -433,8 +451,15 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <span class="status-badge {{ $statusClass }}">
-                                        {{ $ticket->status ?: 'Unknown' }}
+                                    <span
+                                        class="status-badge {{ $statusClass }}"
+                                        @if ($handlingStatus === 'Sedang Ditangani' && $handlerName)
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Ditangani oleh: {{ $handlerName }}"
+                                        @endif
+                                    >
+                                        {{ $handlingStatus }}
                                     </span>
                                 </td>
 
@@ -513,6 +538,13 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Tooltip nama SOC Engineer pemegang tiket
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+                    new bootstrap.Tooltip(el);
+                });
+            }
+
             const form = document.getElementById('ticket-filter-form');
             const searchInput = document.getElementById('search');
             const dateInput = document.getElementById('event_date');
