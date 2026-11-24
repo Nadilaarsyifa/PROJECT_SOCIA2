@@ -208,7 +208,7 @@
                             <button type="button"
                                 class="btn btn-success fw-semibold"
                                 data-bs-toggle="modal"
-                                data-bs-target="#exportExcelModal" >
+                                data-bs-target="#exportExcelModal">
                                 Export Excel
                             </button>
 
@@ -257,12 +257,12 @@
                                         <select name="year" id="export_year"
                                             class="form-select" required>
                                             @forelse ($years as $year)
-                                                <option value="{{ $year }}"
-                                                    @selected((int) $year === (int) $years->first())>
-                                                    {{ $year }}
-                                                </option>
+                                            <option value="{{ $year }}"
+                                                @selected((int) $year===(int) $years->first())>
+                                                {{ $year }}
+                                            </option>
                                             @empty
-                                                <option value="">Tidak ada data tahun</option>
+                                            <option value="">Tidak ada data tahun</option>
                                             @endforelse
                                         </select>
 
@@ -370,7 +370,7 @@
                                 <th>Detection</th>
                                 <th class="text-center" style="width: 120px;">Risk Level</th>
                                 <th class="text-center" style="width: 150px;">Event Time</th>
-                                <th class="text-center" style="width: 110px;">Status</th>
+                                <th class="text-center" style="width: 180px;">Status Penanganan</th>
                                 <th class="text-center" style="width: 130px;">Action</th>
                             </tr>
                         </thead>
@@ -525,11 +525,13 @@
 
                 {{-- Pagination --}}
                 @if ($tickets->hasPages())
-                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 p-4 border-top">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 p-4 border-top pagination-wrapper">
                     <span class="text-secondary small">
                         Halaman {{ $tickets->currentPage() }} dari {{ $tickets->lastPage() }}
                     </span>
-                    {{ $tickets->links() }}
+                    <div>
+                        {{ $tickets->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
                 @endif
             </div>
